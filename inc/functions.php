@@ -35,12 +35,26 @@ function redirect($path) {
 }
 
 /**
+ * Allowed image extensions and MIME types (all common image formats)
+ */
+function getAllowedImageTypes() {
+    return [
+        'ext' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff', 'tif', 'ico', 'svg', 'heic', 'heif', 'avif'],
+        'mime' => [
+            'image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/x-ms-bmp',
+            'image/tiff', 'image/x-tiff', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/svg+xml',
+            'image/heic', 'image/heif', 'image/avif', 'image/x-icon',
+        ],
+    ];
+}
+
+/**
  * Upload an image file and return the relative URL for storage
  * Uses absolute path for save so it works regardless of CWD
  */
 function uploadImage($file, $uploadDir = null) {
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    $maxSize = 5 * 1024 * 1024; // 5MB
+    $allowed = getAllowedImageTypes();
+    $maxSize = 10 * 1024 * 1024; // 10MB
 
     $relDir = 'assets/uploads/';
     if ($uploadDir === null) {
@@ -54,7 +68,7 @@ function uploadImage($file, $uploadDir = null) {
     if ($file['error'] !== UPLOAD_ERR_OK) {
         $messages = [
             UPLOAD_ERR_INI_SIZE   => 'File exceeds server limit.',
-            UPLOAD_ERR_FORM_SIZE  => 'File too large. Max 5MB.',
+            UPLOAD_ERR_FORM_SIZE  => 'File too large. Max 10MB.',
             UPLOAD_ERR_PARTIAL    => 'Upload was interrupted. Try again.',
             UPLOAD_ERR_NO_TMP_DIR => 'Server upload error. Try again later.',
             UPLOAD_ERR_CANT_WRITE => 'Server could not save file. Try again.',
@@ -64,12 +78,15 @@ function uploadImage($file, $uploadDir = null) {
         return ['success' => false, 'message' => $msg];
     }
 
-    if (!empty($file['type']) && !in_array($file['type'], $allowedTypes)) {
-        return ['success' => false, 'message' => 'Invalid file type. Use JPG, PNG, GIF, or WEBP.'];
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $mimeOk = empty($file['type']) || in_array($file['type'], $allowed['mime']) || strpos((string)$file['type'], 'image/') === 0;
+    $extOk = in_array($ext, $allowed['ext']);
+    if (!$mimeOk && !$extOk) {
+        return ['success' => false, 'message' => 'Invalid file type. Use an image file (e.g. JPG, PNG, GIF, WEBP, BMP, TIFF, SVG, HEIC).'];
     }
 
     if (!empty($file['size']) && $file['size'] > $maxSize) {
-        return ['success' => false, 'message' => 'File too large. Max 5MB.'];
+        return ['success' => false, 'message' => 'File too large. Max 10MB.'];
     }
 
     if (!is_dir($uploadDir)) {
@@ -79,8 +96,7 @@ function uploadImage($file, $uploadDir = null) {
         return ['success' => false, 'message' => 'Upload folder not writable.'];
     }
 
-    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+    if (!in_array($ext, $allowed['ext'])) {
         $ext = 'jpg';
     }
     $filename = uniqid('pay_') . '.' . $ext;
@@ -94,18 +110,37 @@ function uploadImage($file, $uploadDir = null) {
 }
 
 /**
+ * Allowed audio extensions and MIME types (all common audio formats)
+ */
+function getAllowedAudioTypes() {
+    return [
+        'ext' => ['mp3', 'wav', 'ogg', 'oga', 'm4a', 'aac', 'flac', 'wma', 'webm', 'opus', 'mid', 'midi', 'mp4', 'aiff', 'aif'],
+        'mime' => [
+            'audio/mpeg', 'audio/mp3', 'audio/x-mpeg', 'audio/wav', 'audio/x-wav', 'audio/wave',
+            'audio/ogg', 'audio/vorbis', 'audio/webm', 'audio/mp4', 'audio/x-m4a', 'audio/m4a',
+            'audio/aac', 'audio/flac', 'audio/x-flac', 'audio/x-ms-wma', 'audio/opus',
+            'audio/midi', 'audio/mid', 'audio/x-midi', 'audio/aiff', 'audio/x-aiff',
+            'video/mp4', 'video/webm',
+        ],
+    ];
+}
+
+/**
  * Upload an audio file and return the relative path
  */
 function uploadAudio($file, $uploadDir = 'assets/uploads/') {
-    $allowedTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/webm', 'audio/mp4', 'audio/x-m4a', 'audio/aac'];
+    $allowed = getAllowedAudioTypes();
     $maxSize = 10 * 1024 * 1024; // 10MB
 
     if ($file['error'] !== UPLOAD_ERR_OK) {
         return ['success' => false, 'message' => 'Upload error.'];
     }
 
-    if (!in_array($file['type'], $allowedTypes)) {
-        return ['success' => false, 'message' => 'Invalid file type. Use MP3, WAV, OGG, or M4A.'];
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $mimeOk = empty($file['type']) || in_array($file['type'], $allowed['mime']) || strpos((string)$file['type'], 'audio/') === 0 || strpos((string)$file['type'], 'video/') === 0;
+    $extOk = in_array($ext, $allowed['ext']);
+    if (!$mimeOk && !$extOk) {
+        return ['success' => false, 'message' => 'Invalid file type. Use an audio file (e.g. MP3, WAV, OGG, M4A, AAC, FLAC, WEBM, OPUS).'];
     }
 
     if ($file['size'] > $maxSize) {
@@ -116,8 +151,9 @@ function uploadAudio($file, $uploadDir = 'assets/uploads/') {
         mkdir($uploadDir, 0755, true);
     }
 
-    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    if (!$ext) $ext = 'mp3';
+    if (!in_array($ext, $allowed['ext'])) {
+        $ext = 'mp3';
+    }
     $filename = uniqid('audio_') . '.' . $ext;
     $destination = $uploadDir . $filename;
 

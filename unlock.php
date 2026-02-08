@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         || !empty($_FILES['payment_screenshot']['tmp_name'])
     );
     if (empty($_POST) && empty($fileSent) && isset($_GET['key'])) {
-        $error = 'Upload or form data too large. Use an image under 5MB and try again.';
+        $error = 'Upload or form data too large. Use an image under 10MB and try again.';
         $key = trim($_GET['key']);
     } elseif (empty($key)) {
         $error = 'Invalid link. Please use the link sent to you.';
@@ -166,8 +166,8 @@ if (!$success) {
                             </div>
                             <div class="mb-4">
                                 <label class="form-label fw-semibold">Payment screenshot</label>
-                                <input type="file" name="payment_screenshot" id="paymentScreenshot" class="form-control form-control-lg" accept="image/jpeg,image/png,image/gif,image/webp" required style="border-radius: 14px;">
-                                <small class="text-muted d-block mt-1">JPG, PNG, GIF or WEBP. Max 5MB.</small>
+                                <input type="file" name="payment_screenshot" id="paymentScreenshot" class="form-control form-control-lg" accept="image/*" required style="border-radius: 14px;">
+                                <small class="text-muted d-block mt-1">Any image format (JPG, PNG, GIF, WEBP, BMP, TIFF, SVG, HEIC, etc.). Max 10MB.</small>
                                 <div id="screenshotPreview" class="mt-3 text-center d-none">
                                     <p class="small text-muted mb-2">Preview</p>
                                     <img id="screenshotPreviewImg" src="" alt="Preview" class="rounded border" style="max-width:100%; max-height:220px; object-fit:contain; background:#f8f9fa;">
