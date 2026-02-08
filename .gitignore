@@ -1,0 +1,20 @@
+# Config and credentials (use .example files as templates)
+inc/config.php
+inc/db.php
+
+# Uploads (user content)
+assets/uploads/*
+!assets/uploads/.gitkeep
+
+# OS and editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# PHP
+vendor/
+composer.lock
+*.log
