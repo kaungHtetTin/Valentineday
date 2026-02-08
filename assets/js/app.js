@@ -24,6 +24,98 @@ $(function () {
         else   { $('.progress-step[data-step="2"]').removeClass('active'); $('#progressFill').css('width','0%'); $('#emptyState').slideDown(300); }
     }
 
+    /* ---- Load story for editing (create.php?key=xxx) ---- */
+    if (window.EDIT_STORY_DATA) {
+        var data = window.EDIT_STORY_DATA;
+        var couple = data.couple || {};
+        if (couple.yourPhoto) {
+            $('#yourPhotoUrl').val(couple.yourPhoto);
+            $('#yourPhotoImg').attr('src', couple.yourPhoto).removeClass('d-none');
+            $('#yourPhotoPlaceholder').addClass('d-none');
+        }
+        if (couple.partnerPhoto) {
+            $('#partnerPhotoUrl').val(couple.partnerPhoto);
+            $('#partnerPhotoImg').attr('src', couple.partnerPhoto).removeClass('d-none');
+            $('#partnerPhotoPlaceholder').addClass('d-none');
+        }
+        if (couple.anniversaryDate) $('#anniversaryDate').val(couple.anniversaryDate);
+
+        var blocks = data.blocks || [];
+        blockId = blocks.length;
+        $('#emptyState').hide();
+        blocks.forEach(function (b, i) {
+            var id = i + 1;
+            if (b.type === 'text') {
+                var $textCard = $(
+                    '<div class="card block-card p-4 mb-3" data-block-id="'+id+'" data-type="text">' +
+                    '<button type="button" class="block-remove" title="Remove">&times;</button>' +
+                    '<span class="badge bg-info block-type-badge mb-2"><i class="bi bi-chat-quote-fill me-1"></i>Text</span>' +
+                    '<textarea class="form-control block-value" rows="3" placeholder="Write something sweet…"></textarea>' +
+                    '</div>');
+                $textCard.find('.block-value').val(b.value || '');
+                $('#blocksContainer').append($textCard);
+            } else if (b.type === 'photo') {
+                $('#blocksContainer').append(
+                    '<div class="card block-card p-4 mb-3" data-block-id="'+id+'" data-type="photo">' +
+                    '<button type="button" class="block-remove" title="Remove">&times;</button>' +
+                    '<span class="badge bg-success block-type-badge mb-2"><i class="bi bi-image-fill me-1"></i>Photo</span>' +
+                    '<div class="text-center py-3">' +
+                    '<div class="photo-preview mb-3 d-none"><img src="" alt="" class="photo-preview-img"></div>' +
+                    '<button type="button" class="add-block-btn choose-photo px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>Upload Photo</button>' +
+                    '<input type="hidden" class="block-value">' +
+                    '<div class="upload-progress d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>Uploading…</small></div></div>' +
+                    '</div></div>');
+                var $last = $('#blocksContainer .block-card[data-type="photo"]').last();
+                if (b.url) {
+                    $last.find('.block-value').val(b.url);
+                    $last.find('.photo-preview-img').attr('src', b.url);
+                    $last.find('.photo-preview').removeClass('d-none');
+                    $last.find('.choose-photo').html('<i class="bi bi-arrow-repeat me-1"></i>Change');
+                }
+            } else if (b.type === 'audio') {
+                var $aud = $(
+                    '<div class="card block-card p-4 mb-3" data-block-id="'+id+'" data-type="audio">' +
+                    '<button type="button" class="block-remove" title="Remove">&times;</button>' +
+                    '<span class="badge bg-purple block-type-badge mb-2"><i class="bi bi-music-note-beamed me-1"></i>Audio</span>' +
+                    '<div class="mb-3"><label class="form-label small fw-bold">Caption <span class="text-muted fw-normal">(optional)</span></label>' +
+                    '<input type="text" class="form-control audio-caption" placeholder="Our song, a voice note…"></div>' +
+                    '<div class="text-center py-3">' +
+                    '<div class="audio-preview mb-3"></div>' +
+                    '<button type="button" class="add-block-btn choose-audio px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>Upload Audio</button>' +
+                    '<input type="hidden" class="block-value">' +
+                    '<div class="upload-progress-audio d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>Uploading…</small></div></div>' +
+                    '<p class="text-muted small mt-2 mb-0"><i class="bi bi-info-circle me-1"></i>MP3 only — max 10MB</p>' +
+                    '</div></div>');
+                $aud.find('.audio-caption').val(b.caption || '');
+                $aud.find('.block-value').val(b.url || '');
+                $('#blocksContainer').append($aud);
+                if (b.url) {
+                    var $preview = $aud.find('.audio-preview');
+                    $preview.html(buildCustomPlayerHtml()).removeClass('d-none');
+                    $preview.find('.lf-audio-src').attr('src', b.url);
+                    $preview.find('.lf-track-title').text(b.caption || 'Uploaded audio');
+                    initCustomPlayer($preview);
+                    $aud.find('.choose-audio').html('<i class="bi bi-arrow-repeat me-1"></i>Change');
+                }
+            } else if (b.type === 'game') {
+                $('#blocksContainer').append(
+                    '<div class="card block-card p-4 mb-3" data-block-id="'+id+'" data-type="game">' +
+                    '<button type="button" class="block-remove" title="Remove">&times;</button>' +
+                    '<span class="badge bg-danger block-type-badge mb-2"><i class="bi bi-joystick me-1"></i>Yes / No Game</span>' +
+                    '<div class="row g-3 mb-3"><div class="col-6"><label class="form-label small fw-bold">Yes Button</label><input type="text" class="form-control game-yes-text" value="YES ❤️"></div>' +
+                    '<div class="col-6"><label class="form-label small fw-bold">No Button</label><input type="text" class="form-control game-no-text" value="NO 😒"></div></div>' +
+                    '<div><label class="form-label small fw-bold">Message After "Yes"</label><input type="text" class="form-control game-success-msg" value="See you on Valentine 💘"></div>' +
+                    '</div>');
+                var $game = $('#blocksContainer .block-card[data-type="game"]').last();
+                $game.find('.game-yes-text').val(b.yesText || 'YES ❤️');
+                $game.find('.game-no-text').val(b.noText || 'NO 😒');
+                $game.find('.game-success-msg').val(b.successMessage || 'See you on Valentine 💘');
+            }
+        });
+        blockId = blocks.length + 1;
+        updateProgress();
+    }
+
     /* ---- Couple Photo Uploads (Been Together) ---- */
     var coupleTarget = null; // 'your' or 'partner'
 
@@ -223,7 +315,7 @@ $(function () {
             '<button type="button" class="add-block-btn choose-audio px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>Upload Audio</button>' +
             '<input type="hidden" class="block-value">' +
             '<div class="upload-progress-audio d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>Uploading…</small></div></div>' +
-            '<p class="text-muted small mt-2 mb-0"><i class="bi bi-info-circle me-1"></i>MP3, WAV, OGG, M4A — max 10MB</p>' +
+            '<p class="text-muted small mt-2 mb-0"><i class="bi bi-info-circle me-1"></i>MP3 only — max 10MB</p>' +
             '</div></div>');
         updateProgress();
     });
@@ -309,8 +401,11 @@ $(function () {
         if (partnerPhoto) coupleData.partnerPhoto = partnerPhoto;
         if (annDate)      coupleData.anniversaryDate = annDate;
 
-        $btn.prop('disabled',true).html('<span class="spinner-border spinner-border-sm me-2"></span>Creating…');
-        $.ajax({ url:'save.php', type:'POST', contentType:'application/json', data:JSON.stringify({couple:coupleData,blocks:blocks}),
+        var payload = { couple: coupleData, blocks: blocks };
+        if (window.EDIT_STORY_DATA && window.EDIT_STORY_DATA.story_key) payload.story_key = window.EDIT_STORY_DATA.story_key;
+
+        $btn.prop('disabled',true).html('<span class="spinner-border spinner-border-sm me-2"></span>' + (payload.story_key ? 'Saving…' : 'Creating…'));
+        $.ajax({ url:'save.php', type:'POST', contentType:'application/json', data:JSON.stringify(payload),
             success: function (r) { if (r.success) window.location.href=r.redirect; else { alert(r.message||'Error'); $btn.prop('disabled',false).html('<i class="bi bi-eye-fill me-2"></i>Preview & Share'); } },
             error:   function ()  { alert('Network error.'); $btn.prop('disabled',false).html('<i class="bi bi-eye-fill me-2"></i>Preview & Share'); }
         });

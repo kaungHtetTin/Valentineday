@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'screenshot_url' => $upload['url'],
                         'token'          => $token
                     ]);
-                    $statusUrl = baseUrl() . '/view.php?token=' . $token;
+                    $statusUrl = 'view.php?token=' . $token;
                     $success = true;
                 } catch (Exception $e) {
                     $error = 'Something went wrong. Please try again.';

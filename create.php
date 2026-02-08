@@ -5,6 +5,18 @@
  */
 require_once 'inc/db.php';
 require_once 'inc/functions.php';
+
+$editKey = isset($_GET['key']) ? trim($_GET['key']) : '';
+$editStoryData = null;
+if ($editKey) {
+    $story = getStoryByKey($pdo, $editKey);
+    if ($story) {
+        $editStoryData = decodeStory($story['story_json']);
+        $editStoryData['story_key'] = $editKey;
+    } else {
+        $editKey = '';
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -143,10 +155,13 @@ require_once 'inc/functions.php';
     <!-- Hidden file input for photo uploads -->
     <input type="file" id="hiddenFileInput" accept="image/*" style="display:none">
     <!-- Hidden file input for audio uploads -->
-    <input type="file" id="hiddenAudioInput" accept="audio/*" style="display:none">
+    <input type="file" id="hiddenAudioInput" accept="audio/mpeg,audio/mp3,.mp3" style="display:none">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <?php if ($editStoryData): ?>
+    <script>window.EDIT_STORY_DATA = <?= json_encode($editStoryData) ?>;</script>
+    <?php endif; ?>
     <script src="assets/js/app.js"></script>
 </body>
 </html>

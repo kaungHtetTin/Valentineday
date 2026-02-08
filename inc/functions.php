@@ -110,18 +110,12 @@ function uploadImage($file, $uploadDir = null) {
 }
 
 /**
- * Allowed audio extensions and MIME types (all common audio formats)
+ * Allowed audio: MP3 only
  */
 function getAllowedAudioTypes() {
     return [
-        'ext' => ['mp3', 'wav', 'ogg', 'oga', 'm4a', 'aac', 'flac', 'wma', 'webm', 'opus', 'mid', 'midi', 'mp4', 'aiff', 'aif'],
-        'mime' => [
-            'audio/mpeg', 'audio/mp3', 'audio/x-mpeg', 'audio/wav', 'audio/x-wav', 'audio/wave',
-            'audio/ogg', 'audio/vorbis', 'audio/webm', 'audio/mp4', 'audio/x-m4a', 'audio/m4a',
-            'audio/aac', 'audio/flac', 'audio/x-flac', 'audio/x-ms-wma', 'audio/opus',
-            'audio/midi', 'audio/mid', 'audio/x-midi', 'audio/aiff', 'audio/x-aiff',
-            'video/mp4', 'video/webm',
-        ],
+        'ext' => ['mp3'],
+        'mime' => ['audio/mpeg', 'audio/mp3', 'audio/x-mpeg'],
     ];
 }
 
@@ -137,10 +131,10 @@ function uploadAudio($file, $uploadDir = 'assets/uploads/') {
     }
 
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $mimeOk = empty($file['type']) || in_array($file['type'], $allowed['mime']) || strpos((string)$file['type'], 'audio/') === 0 || strpos((string)$file['type'], 'video/') === 0;
+    $mimeOk = empty($file['type']) || in_array($file['type'], $allowed['mime']);
     $extOk = in_array($ext, $allowed['ext']);
     if (!$mimeOk && !$extOk) {
-        return ['success' => false, 'message' => 'Invalid file type. Use an audio file (e.g. MP3, WAV, OGG, M4A, AAC, FLAC, WEBM, OPUS).'];
+        return ['success' => false, 'message' => 'Invalid file type. Only MP3 is allowed.'];
     }
 
     if ($file['size'] > $maxSize) {

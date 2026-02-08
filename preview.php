@@ -16,7 +16,7 @@ $storyData = decodeStory($story['story_json']);
 $blocks = $storyData['blocks'];
 $couple = isset($storyData['couple']) ? $storyData['couple'] : [];
 $hasCoupleData = !empty($couple['yourPhoto']) || !empty($couple['partnerPhoto']) || !empty($couple['anniversaryDate']);
-$shareUrl = baseUrl() . '/unlock.php?key=' . $story['story_key'];
+$shareUrl = 'unlock.php?key=' . $story['story_key'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -187,6 +187,9 @@ $shareUrl = baseUrl() . '/unlock.php?key=' . $story['story_key'];
                 </div>
 
                 <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+                    <a href="create.php?key=<?= htmlspecialchars($story['story_key']) ?>" class="btn btn-outline-secondary btn-lg px-4 py-3" style="border-radius:50px;">
+                        <i class="bi bi-pencil me-2"></i>Edit story
+                    </a>
                     <a href="<?= htmlspecialchars($shareUrl) ?>" class="btn btn-pink btn-lg px-4 py-3" style="border-radius:50px;" target="_blank">
                         <i class="bi bi-unlock-fill me-2"></i>Unlock page
                     </a>

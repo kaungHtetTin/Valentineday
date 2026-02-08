@@ -52,19 +52,27 @@ if (empty($data['blocks'])) {
     exit;
 }
 
+$storyJson = json_encode([
+    'couple' => isset($data['couple']) ? $data['couple'] : [],
+    'blocks' => $data['blocks']
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
 try {
-    $storyKey = generateStoryKey();
+    $isUpdate = !empty($data['story_key']);
+    $storyKey = $isUpdate ? trim($data['story_key']) : generateStoryKey();
 
-    $storyJson = json_encode([
-        'couple' => isset($data['couple']) ? $data['couple'] : [],
-        'blocks' => $data['blocks']
-    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
-    $stmt = $pdo->prepare("INSERT INTO stories (story_key, story_json, is_paid) VALUES (:key, :json, 0)");
-    $stmt->execute([
-        'key'  => $storyKey,
-        'json' => $storyJson
-    ]);
+    if ($isUpdate) {
+        $existing = getStoryByKey($pdo, $storyKey);
+        if (!$existing) {
+            echo json_encode(['success' => false, 'message' => 'Story not found.']);
+            exit;
+        }
+        $stmt = $pdo->prepare("UPDATE stories SET story_json = :json WHERE story_key = :key");
+        $stmt->execute(['json' => $storyJson, 'key' => $storyKey]);
+    } else {
+        $stmt = $pdo->prepare("INSERT INTO stories (story_key, story_json, is_paid) VALUES (:key, :json, 0)");
+        $stmt->execute(['key' => $storyKey, 'json' => $storyJson]);
+    }
 
     echo json_encode([
         'success'   => true,
