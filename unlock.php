@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'screenshot_url' => $upload['url'],
                         'token'          => $token
                     ]);
-                    $statusUrl =  baseUrl().'/love/view.php?token=' . $token;
+                    $statusUrl = BASE_URL . '/view.php?token=' . $token;
                     $success = true;
                 } catch (Exception $e) {
                     $error = 'Something went wrong. Please try again.';
@@ -68,19 +68,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // GET or POST with error: need to show form (and validate key for GET)
 if (!$success) {
     if (empty($key)) {
-        header('Location: ' . 'index.php');
+        header('Location: ' . BASE_URL . '/index.php');
         exit;
     }
     $story = getStoryByKey($pdo, $key);
     if (!$story) {
-        header('Location: '. 'index.php');
+        header('Location: ' . BASE_URL . '/index.php');
         exit;
     }
     // If story is already paid, redirect to view page (same one link = story)
     if (isPaid($story)) {
         $token = getApprovedTokenForStory($pdo, $key);
         if ($token) {
-            header('Location: ' . 'view.php?token=' . urlencode($token));
+            header('Location: ' . BASE_URL . '/view.php?token=' . urlencode($token));
             exit;
         }
     }

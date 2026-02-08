@@ -16,7 +16,7 @@ $storyData = decodeStory($story['story_json']);
 $blocks = $storyData['blocks'];
 $couple = isset($storyData['couple']) ? $storyData['couple'] : [];
 $hasCoupleData = !empty($couple['yourPhoto']) || !empty($couple['partnerPhoto']) || !empty($couple['anniversaryDate']);
-$shareUrl = 'unlock.php?key=' . $story['story_key'];
+$shareUrl = BASE_URL . '/unlock.php?key=' . $story['story_key'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

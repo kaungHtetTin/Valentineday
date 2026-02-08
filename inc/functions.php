@@ -19,18 +19,35 @@ function sanitize($input) {
 }
 
 /**
- * Get base URL of the application
+ * Base URL (from config BASE_PATH). Defined when this file is included.
+ */
+if (!defined('BASE_PATH')) {
+    if (file_exists(__DIR__ . '/config.php')) {
+        require_once __DIR__ . '/config.php';
+    }
+    if (!defined('BASE_PATH')) {
+        define('BASE_PATH', '/love_app');
+    }
+}
+if (!defined('BASE_URL')) {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
+    $path = rtrim((string) BASE_PATH, '/');
+    define('BASE_URL', $protocol . '://' . $host . ($path !== '' ? $path : ''));
+}
+
+/**
+ * Get base URL (returns BASE_URL constant)
  */
 function baseUrl() {
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-    return $protocol . '://' . $_SERVER['HTTP_HOST'] . '/love_app';
+    return BASE_URL;
 }
 
 /**
  * Redirect to a given path
  */
 function redirect($path) {
-    header("Location: " . baseUrl() . '/' . ltrim($path, '/'));
+    header("Location: " . BASE_URL . '/' . ltrim($path, '/'));
     exit;
 }
 

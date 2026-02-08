@@ -7,8 +7,8 @@ require_once __DIR__ . '/../inc/db.php';
 require_once __DIR__ . '/../inc/functions.php';
 require_once __DIR__ . '/../inc/config.php';
 
-$baseUrl = baseUrl();
-$adminBase = rtrim($baseUrl, '/') . '/admin';
+$baseUrl = BASE_URL;
+$adminBase = rtrim(BASE_URL, '/') . '/admin';
 
 // Logout
 if (isset($_GET['logout'])) {

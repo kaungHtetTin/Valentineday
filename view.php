@@ -13,7 +13,7 @@ $token = isset($_GET['token']) ? trim($_GET['token']) : '';
 if ($token && empty($key)) {
     $request = getUnlockRequestByToken($pdo, $token);
     if (!$request) {
-        header('Location: ' . baseUrl() . '/index.php');
+        header('Location: ' . BASE_URL . '/index.php');
         exit;
     }
     $status = $request['status'];
@@ -21,7 +21,7 @@ if ($token && empty($key)) {
     if ($status === 'approved') {
         $story = getStoryByKey($pdo, $request['story_key']);
         if (!$story) {
-            header('Location: ' . baseUrl() . '/index.php');
+            header('Location: ' . BASE_URL . '/index.php');
             exit;
         }
         $storyData = decodeStory($story['story_json']);
@@ -110,7 +110,7 @@ if (!$story) {
 }
 
 if (!isViewAccessAllowed($pdo, $key, $token)) {
-    $unlockUrl = baseUrl() . '/unlock.php?key=' . urlencode($key);
+    $unlockUrl = BASE_URL . '/unlock.php?key=' . urlencode($key);
     die('
     <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
