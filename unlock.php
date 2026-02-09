@@ -1,7 +1,7 @@
 <?php
 /**
  * Unlock Page
- * LoveFun – Partner fills form (email, name, phone, payment screenshot) then gets partner view link
+ * LoveFun – Partner uploads payment screenshot to unlock (admin approves).
  */
 require_once 'inc/db.php';
 require_once 'inc/functions.php';
@@ -14,9 +14,6 @@ $statusUrl = '';  // customer checks approval here; link given only after admin 
 // POST: handle unlock form submit (payment screenshot → pending; admin approves later)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $key = isset($_POST['key']) ? trim($_POST['key']) : (isset($_GET['key']) ? trim($_GET['key']) : $key);
-    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
-    $name = isset($_POST['name']) ? trim($_POST['name']) : '';
-    $phone = isset($_POST['phone']) ? trim($_POST['phone']) : '';
 
     // When post_max_size exceeded, PHP may empty $_POST and $_FILES
     $fileSent = isset($_FILES['payment_screenshot']) && is_array($_FILES['payment_screenshot']) && (
@@ -28,8 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $key = trim($_GET['key']);
     } elseif (empty($key)) {
         $error = 'Invalid link. Please use the link sent to you.';
-    } elseif (empty($email) || empty($name) || empty($phone)) {
-        $error = 'Please fill in email, name and phone.';
     } elseif (!isset($_FILES['payment_screenshot']) || $_FILES['payment_screenshot']['error'] === UPLOAD_ERR_NO_FILE) {
         $error = 'Please upload your payment screenshot.';
     } else {
@@ -49,9 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ");
                     $stmt->execute([
                         'story_key'      => $key,
-                        'email'          => $email,
-                        'name'           => $name,
-                        'phone'          => $phone,
+                        'email'          => '',
+                        'name'           => '',
+                        'phone'          => '',
                         'screenshot_url' => $upload['url'],
                         'token'          => $token
                     ]);
@@ -144,26 +139,23 @@ if (!$success) {
                         <p class="text-muted mb-0"><?= nl2br(htmlspecialchars($teaserText)) ?></p>
                     </div>
 
+                    <!-- Payment method -->
+                    <div class="glass-card p-4 mb-4 animate-in">
+                        <h5 class="fw-bold font-heading mb-3"><i class="bi bi-bank me-2"></i>Payment information</h5>
+                        <p class="mb-1"><strong>Banking</strong> — KBZpay, WavePay</p>
+                        <p class="mb-1"><strong>Account No</strong> — 09688683805</p>
+                        <p class="mb-0"><strong>Account Name</strong> — Min Htet Kyaw</p>
+                        <p class="small text-muted mt-2 mb-0">Pay using the above details, then upload your payment screenshot below.</p>
+                    </div>
+
                     <!-- Unlock form -->
                     <div class="glass-card p-4 animate-in">
-                        <h5 class="fw-bold font-heading mb-3">Fill in your details to unlock</h5>
+                        <h5 class="fw-bold font-heading mb-3">Upload payment screenshot</h5>
                         <?php if ($error): ?>
                             <div class="alert alert-danger py-2 mb-3"><?= htmlspecialchars($error) ?></div>
                         <?php endif; ?>
                         <form method="post" action="unlock.php?key=<?= htmlspecialchars(urlencode($key)) ?>" enctype="multipart/form-data" id="unlockForm">
                             <input type="hidden" name="key" value="<?= htmlspecialchars($key) ?>">
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Email</label>
-                                <input type="email" name="email" class="form-control form-control-lg" placeholder="your@email.com" required value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>" style="border-radius: 14px;">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Name</label>
-                                <input type="text" name="name" class="form-control form-control-lg" placeholder="Your name" required value="<?= isset($_POST['name']) ? htmlspecialchars($_POST['name']) : '' ?>" style="border-radius: 14px;">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Phone</label>
-                                <input type="tel" name="phone" class="form-control form-control-lg" placeholder="Your phone" required value="<?= isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : '' ?>" style="border-radius: 14px;">
-                            </div>
                             <div class="mb-4">
                                 <label class="form-label fw-semibold">Payment screenshot</label>
                                 <input type="file" name="payment_screenshot" id="paymentScreenshot" class="form-control form-control-lg" accept="image/*" required style="border-radius: 14px;">
