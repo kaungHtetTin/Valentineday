@@ -526,32 +526,55 @@ $(function () {
     }
     if (window.GAME_LOVES && window.GAME_SADS) preloadGifs();
 
-    /* ---- YES click: win (optional gifBlock from GAME_LOVES) ---- */
+    /* ---- YES click: win (show random pre-loaded love GIF) ---- */
     $(document).on('click', '.game-yes', function () {
+        console.log('=== YES BUTTON CLICKED ===');
         var $block = $(this).closest('.game-block');
+        console.log('Game block found:', $block.length);
         var msg    = $block.data('success-message');
         var $arena = $block.find('.game-arena');
         var $msg   = $block.find('.game-success-message');
-        var $gifBlock = $block.next('.gif-block').length ? $block.next('.gif-block') : $('#gifBlock');
+        var $gifContainer = $block.next('.gif-block-container');
+        console.log('GIF container found:', $gifContainer.length);
+        console.log('GIF container HTML:', $gifContainer.length ? $gifContainer[0].outerHTML.substring(0, 200) : 'NOT FOUND');
 
-        if (window.GAME_LOVES && window.GAME_LOVES.length && $gifBlock.length) {
-            var item = window.GAME_LOVES[Math.floor(Math.random() * window.GAME_LOVES.length)];
-            var txt = (item.text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-            var src = (item.url || item.gif || '');
-            if (src && !src.match(/^https?:\/\//) && typeof BASE_URL !== 'undefined' && BASE_URL) {
-                src = BASE_URL + '/' + src.replace(/^\//, '');
+        if ($gifContainer.length) {
+            // Hide any previously shown GIF for this game block
+            $block.prev('.gif-block.gif-block-visible').removeClass('gif-block-visible').addClass('d-none');
+            
+            // Get all love GIF items
+            var $loveGifs = $gifContainer.find('.gif-item[data-type="love"]');
+            console.log('Love GIFs found:', $loveGifs.length);
+            if ($loveGifs.length) {
+                // Randomly select one love GIF
+                var randomIdx = Math.floor(Math.random() * $loveGifs.length);
+                console.log('Selected random index:', randomIdx);
+                var $selectedGif = $loveGifs.eq(randomIdx).clone();
+                console.log('Selected GIF cloned:', $selectedGif.length);
+                console.log('Selected GIF HTML:', $selectedGif[0] ? $selectedGif[0].outerHTML.substring(0, 300) : 'NO HTML');
+                // Show the selected GIF immediately (already loaded)
+                $selectedGif.removeClass('d-none gif-item').addClass('gif-block-visible animate-in');
+                $selectedGif.css({
+                    'opacity': '1',
+                    'display': 'block',
+                    'visibility': 'visible'
+                });
+                // Insert it right before the game block (above)
+                $selectedGif.insertBefore($block);
+                console.log('GIF inserted before game block (above)');
+                console.log('GIF classes:', $selectedGif.attr('class'));
+                console.log('GIF visibility check:', $selectedGif.is(':visible'), 'Display:', $selectedGif.css('display'), 'Opacity:', $selectedGif.css('opacity'));
+                if ($selectedGif[0]) {
+                    console.log('GIF computed style display:', window.getComputedStyle($selectedGif[0]).display);
+                    console.log('GIF parent:', $selectedGif.parent().length ? $selectedGif.parent()[0].tagName : 'NO PARENT');
+                }
+            } else {
+                console.log('ERROR: No love GIFs found in container');
             }
-            var $content = $gifBlock.find('.gif-block-content');
-            if (!$content.length) $content = $gifBlock;
-            var imgHtml = '<div class="gif-block-inner gif-block-love"><div class="gif-loading"><div class="spinner-border spinner-border-sm text-pink"></div></div><img class="gif-block-img" src="' + src + '" alt="" loading="eager"><p class="gif-block-text">' + txt + '</p></div>';
-            $content.html(imgHtml);
-            $gifBlock.removeClass('d-none gif-block-sad').addClass('gif-block-visible gif-block-love').css({opacity: 1, display: 'block'});
-            var $img = $content.find('.gif-block-img');
-            var $loading = $content.find('.gif-loading');
-            $img.on('load', function() { $loading.addClass('d-none'); }).on('error', function() { $loading.addClass('d-none'); });
-            if ($img[0] && $img[0].complete && $img[0].naturalWidth > 0) {
-                $loading.addClass('d-none');
-            }
+        } else {
+            console.log('ERROR: GIF container not found. Checking siblings...');
+            console.log('Next element:', $block.next()[0] ? $block.next()[0].tagName + '.' + $block.next()[0].className : 'NONE');
+            console.log('All next siblings:', $block.nextAll().length);
         }
 
         $arena.css({ opacity: 0, transition: 'opacity 0.4s' });
@@ -563,28 +586,52 @@ $(function () {
         confetti(); setTimeout(confetti, 1000); setTimeout(confetti, 2200);
     });
 
-    /* ---- NO click: show random sad gif + text in gifBlock ---- */
+    /* ---- NO click: show random pre-loaded sad GIF ---- */
     $(document).on('click', '.game-no', function (e) {
+        console.log('=== NO BUTTON CLICKED ===');
         var $block = $(this).closest('.game-block');
-        var $gifBlock = $block.next('.gif-block').length ? $block.next('.gif-block') : $('#gifBlock');
-        if (window.GAME_SADS && window.GAME_SADS.length && $gifBlock.length) {
-            var item = window.GAME_SADS[Math.floor(Math.random() * window.GAME_SADS.length)];
-            var txt = (item.text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-            var src = (item.url || item.gif || '');
-            if (src && !src.match(/^https?:\/\//) && typeof BASE_URL !== 'undefined' && BASE_URL) {
-                src = BASE_URL + '/' + src.replace(/^\//, '');
+        console.log('Game block found:', $block.length);
+        var $gifContainer = $block.next('.gif-block-container');
+        console.log('GIF container found:', $gifContainer.length);
+        console.log('GIF container HTML:', $gifContainer.length ? $gifContainer[0].outerHTML.substring(0, 200) : 'NOT FOUND');
+
+        if ($gifContainer.length) {
+            // Hide any previously shown GIF for this game block
+            $block.prev('.gif-block.gif-block-visible').removeClass('gif-block-visible').addClass('d-none');
+            
+            // Get all sad GIF items
+            var $sadGifs = $gifContainer.find('.gif-item[data-type="sad"]');
+            console.log('Sad GIFs found:', $sadGifs.length);
+            if ($sadGifs.length) {
+                // Randomly select one sad GIF
+                var randomIdx = Math.floor(Math.random() * $sadGifs.length);
+                console.log('Selected random index:', randomIdx);
+                var $selectedGif = $sadGifs.eq(randomIdx).clone();
+                console.log('Selected GIF cloned:', $selectedGif.length);
+                console.log('Selected GIF HTML:', $selectedGif[0] ? $selectedGif[0].outerHTML.substring(0, 300) : 'NO HTML');
+                // Show the selected GIF immediately (already loaded)
+                $selectedGif.removeClass('d-none gif-item').addClass('gif-block-visible animate-in');
+                $selectedGif.css({
+                    'opacity': '1',
+                    'display': 'block',
+                    'visibility': 'visible'
+                });
+                // Insert it right before the game block (above)
+                $selectedGif.insertBefore($block);
+                console.log('GIF inserted before game block (above)');
+                console.log('GIF classes:', $selectedGif.attr('class'));
+                console.log('GIF visibility check:', $selectedGif.is(':visible'), 'Display:', $selectedGif.css('display'), 'Opacity:', $selectedGif.css('opacity'));
+                if ($selectedGif[0]) {
+                    console.log('GIF computed style display:', window.getComputedStyle($selectedGif[0]).display);
+                    console.log('GIF parent:', $selectedGif.parent().length ? $selectedGif.parent()[0].tagName : 'NO PARENT');
+                }
+            } else {
+                console.log('ERROR: No sad GIFs found in container');
             }
-            var $content = $gifBlock.find('.gif-block-content');
-            if (!$content.length) $content = $gifBlock;
-            var imgHtml = '<div class="gif-block-inner gif-block-sad"><div class="gif-loading"><div class="spinner-border spinner-border-sm text-muted"></div></div><img class="gif-block-img" src="' + src + '" alt="" loading="eager"><p class="gif-block-text">' + txt + '</p></div>';
-            $content.html(imgHtml);
-            $gifBlock.removeClass('d-none gif-block-love').addClass('gif-block-visible gif-block-sad').css({opacity: 1, display: 'block'});
-            var $img = $content.find('.gif-block-img');
-            var $loading = $content.find('.gif-loading');
-            $img.on('load', function() { $loading.addClass('d-none'); }).on('error', function() { $loading.addClass('d-none'); });
-            if ($img[0] && $img[0].complete && $img[0].naturalWidth > 0) {
-                $loading.addClass('d-none');
-            }
+        } else {
+            console.log('ERROR: GIF container not found. Checking siblings...');
+            console.log('Next element:', $block.next()[0] ? $block.next()[0].tagName + '.' + $block.next()[0].className : 'NONE');
+            console.log('All next siblings:', $block.nextAll().length);
         }
     });
 

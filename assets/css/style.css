@@ -804,6 +804,7 @@ img { max-width: 100%; height: auto; }
     overflow: hidden;
     transition: opacity 0.35s ease, transform 0.4s var(--ease-spring);
 }
+.gif-block-container { display: none !important; }
 .gif-block.d-none { display: none !important; opacity: 0 !important; }
 .gif-block.gif-block-visible {
     display: block !important;

@@ -218,14 +218,6 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
                             </div>
 
                         <?php elseif ($block['type'] === 'game'): ?>
-
-                                             <!-- Separate block: reaction gif + text (filled by JS on YES/NO click) -->
-                            <div class="story-block gif-block glass-card p-4 mb-3 text-center d-none animate-in" style="animation-delay: <?= $delay + 0.1 ?>s">
-                                <!-- JS fills .gif-block-content with img + text -->
-                                <div class="gif-block-content"></div>
-                            </div>
-
-                            
                             <div class="story-block game-block glass-card p-4 mb-3 text-center animate-in"
                                  data-success-message="<?= sanitize($block['successMessage'] ?? 'I love you! 💘') ?>"
                                  style="animation-delay: <?= $delay ?>s">
@@ -240,6 +232,42 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
                                 <div class="game-success-message d-none mt-3">
                                     <p class="success-text"></p>
                                 </div>
+                            </div>
+
+                            <!-- Pre-loaded GIF blocks (hidden, shown randomly on button click) -->
+                            <div class="story-block gif-block-container" style="display: none;">
+                                <?php 
+                                $baseUrl = defined('BASE_URL') ? rtrim(BASE_URL, '/') : '';
+                                // Pre-load all LOVE GIFs
+                                foreach ($loves as $idx => $love): 
+                                    $gifSrc = $love['url'];
+                                    if ($baseUrl && !preg_match('/^https?:\/\//', $gifSrc)) {
+                                        $gifSrc = $baseUrl . '/' . ltrim($gifSrc, '/');
+                                    }
+                                ?>
+                                    <div class="gif-block glass-card p-4 mb-3 text-center gif-block-love gif-item" data-type="love" data-index="<?= $idx ?>">
+                                        <div class="gif-block-inner gif-block-love">
+                                            <img class="gif-block-img" src="<?= htmlspecialchars($gifSrc) ?>" alt="" loading="eager">
+                                            <p class="gif-block-text"><?= htmlspecialchars($love['text']) ?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                                
+                                <?php 
+                                // Pre-load all SAD GIFs
+                                foreach ($sads as $idx => $sad): 
+                                    $gifSrc = $sad['url'];
+                                    if ($baseUrl && !preg_match('/^https?:\/\//', $gifSrc)) {
+                                        $gifSrc = $baseUrl . '/' . ltrim($gifSrc, '/');
+                                    }
+                                ?>
+                                    <div class="gif-block glass-card p-4 mb-3 text-center gif-block-sad gif-item" data-type="sad" data-index="<?= $idx ?>">
+                                        <div class="gif-block-inner gif-block-sad">
+                                            <img class="gif-block-img" src="<?= htmlspecialchars($gifSrc) ?>" alt="" loading="eager">
+                                            <p class="gif-block-text"><?= htmlspecialchars($sad['text']) ?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
 
            
@@ -261,24 +289,25 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        window.GAME_LOVES = <?= json_encode($loves) ?>;
-        window.GAME_SADS  = <?= json_encode($sads) ?>;
-        <?php if (defined('BASE_URL')): ?>window.BASE_URL = <?= json_encode(rtrim(BASE_URL, '/')) ?>;<?php endif; ?>
-        // Preload GIFs immediately with correct paths
-        (function() {
-            var base = (typeof BASE_URL !== 'undefined' && BASE_URL) ? BASE_URL + '/' : '';
-            var allGifs = [].concat(window.GAME_LOVES || [], window.GAME_SADS || []);
-            allGifs.forEach(function(item) {
-                var src = (item.url || item.gif || '');
-                if (src && !src.match(/^https?:\/\//)) {
-                    src = base + src.replace(/^\//, '');
+        // Debug: Check if GIFs are pre-loaded
+        $(document).ready(function() {
+            console.log('=== PAGE LOADED - CHECKING GIF CONTAINERS ===');
+            var $containers = $('.gif-block-container');
+            console.log('Total GIF containers found:', $containers.length);
+            $containers.each(function(idx) {
+                var $container = $(this);
+                var $loveGifs = $container.find('.gif-item[data-type="love"]');
+                var $sadGifs = $container.find('.gif-item[data-type="sad"]');
+                console.log('Container', idx + ':', 'Love GIFs:', $loveGifs.length, 'Sad GIFs:', $sadGifs.length);
+                if ($loveGifs.length > 0) {
+                    console.log('First love GIF src:', $loveGifs.first().find('img').attr('src'));
                 }
-                if (src) {
-                    var img = new Image();
-                    img.src = src;
+                if ($sadGifs.length > 0) {
+                    console.log('First sad GIF src:', $sadGifs.first().find('img').attr('src'));
                 }
             });
-        })();
+            console.log('Total game blocks:', $('.game-block').length);
+        });
     </script>
     <script src="assets/js/app.js"></script>
 </body>
