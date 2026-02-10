@@ -164,12 +164,14 @@ $shareUrl = BASE_URL . '/unlock.php?key=' . $story['story_key'];
                         <?php elseif ($block['type'] === 'game'): ?>
                             <div class="story-block game-block glass-card p-4 mb-3 text-center animate-in" style="animation-delay: <?= 0.2 + $i * 0.15 ?>s;">
                                 <p class="game-question mb-3">Will you be my Valentine? 💘</p>
-                                <div class="d-flex justify-content-center gap-3">
-                                    <button class="btn btn-pink btn-lg" disabled style="animation:none; box-shadow: 0 4px 15px rgba(233,30,99,0.3);">
-                                        <?= sanitize($block['yesText'] ?? 'YES ❤️') ?>
+                                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                    <button class="btn btn-pink btn-lg game-preview-btn" disabled style="animation:none; box-shadow: 0 4px 15px rgba(233,30,99,0.3);">
+                                        <span class="game-btn-sticker"><i class="bi bi-heart-fill"></i></span>
+                                        <span class="game-btn-label"><?= sanitize($block['yesText'] ?? 'Yes') ?></span>
                                     </button>
-                                    <button class="btn btn-outline-secondary btn-lg" disabled>
-                                        <?= sanitize($block['noText'] ?? 'NO 😒') ?>
+                                    <button class="btn btn-outline-secondary btn-lg game-preview-btn" disabled>
+                                        <span class="game-btn-sticker"><i class="bi bi-emoji-frown"></i></span>
+                                        <span class="game-btn-label"><?= sanitize($block['noText'] ?? 'No') ?></span>
                                     </button>
                                 </div>
                                 <small class="text-muted mt-2 d-block">

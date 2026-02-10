@@ -102,13 +102,13 @@ $(function () {
                     '<div class="card block-card p-4 mb-3" data-block-id="'+id+'" data-type="game">' +
                     '<button type="button" class="block-remove" title="ဖယ်ရှားပါ">&times;</button>' +
                     '<span class="badge bg-danger block-type-badge mb-2"><i class="bi bi-joystick me-1"></i>ဟုတ် / မဟုတ် ဂိမ်း</span>' +
-                    '<div class="row g-3 mb-3"><div class="col-6"><label class="form-label small fw-bold">ဟုတ် ခလုတ်</label><input type="text" class="form-control game-yes-text" value="ဟုတ်ပါ ❤️"></div>' +
-                    '<div class="col-6"><label class="form-label small fw-bold">မဟုတ် ခလုတ်</label><input type="text" class="form-control game-no-text" value="မဟုတ်ပါ 😒"></div></div>' +
+                    '<div class="row g-3 mb-3"><div class="col-6"><label class="form-label small fw-bold">ဟုတ် ခလုတ်</label><input type="text" class="form-control game-yes-text" value="Yes"></div>' +
+                    '<div class="col-6"><label class="form-label small fw-bold">မဟုတ် ခလုတ်</label><input type="text" class="form-control game-no-text" value="No"></div></div>' +
                     '<div><label class="form-label small fw-bold">ဟုတ်လို့ ပြန်ပြောတဲ့ စာ</label><input type="text" class="form-control game-success-msg" value="ချစ်သူများနေ့မှာ တွေ့မယ် 💘"></div>' +
                     '</div>');
                 var $game = $('#blocksContainer .block-card[data-type="game"]').last();
-                $game.find('.game-yes-text').val(b.yesText || 'ဟုတ်ပါ ❤️');
-                $game.find('.game-no-text').val(b.noText || 'မဟုတ်ပါ 😒');
+                $game.find('.game-yes-text').val(b.yesText || 'Yes');
+                $game.find('.game-no-text').val(b.noText || 'No');
                 $game.find('.game-success-msg').val(b.successMessage || 'ချစ်သူများနေ့မှာ တွေ့မယ် 💘');
             }
         });
@@ -369,8 +369,8 @@ $(function () {
             '<div class="card block-card p-4 mb-3" data-block-id="'+blockId+'" data-type="game">' +
             '<button type="button" class="block-remove" title="ဖယ်ရှားပါ">&times;</button>' +
             '<span class="badge bg-danger block-type-badge mb-2"><i class="bi bi-joystick me-1"></i>ဟုတ် / မဟုတ် ဂိမ်း</span>' +
-            '<div class="row g-3 mb-3"><div class="col-6"><label class="form-label small fw-bold">ဟုတ် ခလုတ်</label><input type="text" class="form-control game-yes-text" value="ဟုတ်ပါ ❤️"></div>' +
-            '<div class="col-6"><label class="form-label small fw-bold">မဟုတ် ခလုတ်</label><input type="text" class="form-control game-no-text" value="မဟုတ်ပါ 😒"></div></div>' +
+            '<div class="row g-3 mb-3"><div class="col-6"><label class="form-label small fw-bold">ဟုတ် ခလုတ်</label><input type="text" class="form-control game-yes-text" value="Yes"></div>' +
+            '<div class="col-6"><label class="form-label small fw-bold">မဟုတ် ခလုတ်</label><input type="text" class="form-control game-no-text" value="No"></div></div>' +
             '<div><label class="form-label small fw-bold">ဟုတ်လို့ ပြန်ပြောတဲ့ စာ</label><input type="text" class="form-control game-success-msg" value="ချစ်သူများနေ့မှာ တွေ့မယ် 💘"></div>' +
             '</div>');
         updateProgress();
@@ -389,9 +389,11 @@ $(function () {
             if (t === 'text') { var v = $(this).find('.block-value').val().trim(); if (!v) { err=true; $(this).find('.block-value').addClass('is-invalid').focus(); return false; } $(this).find('.block-value').removeClass('is-invalid'); blocks.push({type:'text',value:v}); }
             else if (t === 'photo') { var u = $(this).find('.block-value').val().trim(); if (!u) { err=true; alert('ဓာတ်ပုံ ဦးစွာ တင်ပါ။'); return false; } blocks.push({type:'photo',url:u}); }
             else if (t === 'audio') { var au = $(this).find('.block-value').val().trim(); if (!au) { err=true; alert('အသံဖိုင် ဦးစွာ တင်ပါ။'); return false; } blocks.push({type:'audio',url:au,caption:$(this).find('.audio-caption').val().trim()}); }
-            else if (t === 'game') { blocks.push({type:'game', yesText:$(this).find('.game-yes-text').val()||'ဟုတ်ပါ ❤️', noText:$(this).find('.game-no-text').val()||'မဟုတ်ပါ 😒', noBehavior:'run', successMessage:$(this).find('.game-success-msg').val()||'ချစ်သူများနေ့မှာ တွေ့မယ် 💘'}); }
+            else if (t === 'game') { blocks.push({type:'game', yesText:$(this).find('.game-yes-text').val()||'Yes', noText:$(this).find('.game-no-text').val()||'No', noBehavior:'run', successMessage:$(this).find('.game-success-msg').val()||'ချစ်သူများနေ့မှာ တွေ့မယ် 💘'}); }
         });
         if (err || !blocks.length) { if (!blocks.length && !err) alert('ဘလော့ခ် တစ်ခုအနည်းဆုံး ထည့်ပါ။'); return; }
+        var hasGame = blocks.some(function (b) { return b.type === 'game'; });
+        if (!hasGame) { alert('ဟုတ်/မဟုတ် ဂိမ်း ထည့်ရပါမယ်။'); return; }
         // Gather optional couple data
         var coupleData = {};
         var yourPhoto = $('#yourPhotoUrl').val();
@@ -504,27 +506,48 @@ $(function () {
         }
     }
 
-    /* events: mouseenter, touchstart, click */
-    $(document).on('mouseenter',  '.game-no', function ()  { onNoInteraction($(this)); });
-    $(document).on('touchstart',  '.game-no', function (e) { e.preventDefault(); onNoInteraction($(this)); });
-    $(document).on('click',       '.game-no', function (e) { e.preventDefault(); onNoInteraction($(this)); });
+    /* NO button: click only (no mouseenter/touchstart) */
+    $(document).on('click', '.game-no', function (e) { e.preventDefault(); onNoInteraction($(this)); });
 
-    /* ---- YES click: win ---- */
+    /* ---- YES click: win (optional gifBlock from GAME_LOVES) ---- */
     $(document).on('click', '.game-yes', function () {
         var $block = $(this).closest('.game-block');
         var msg    = $block.data('success-message');
         var $arena = $block.find('.game-arena');
         var $msg   = $block.find('.game-success-message');
+        var $gifBlock = $('#gifBlock');
 
-        // Fade out arena, show message
+        if (window.GAME_LOVES && window.GAME_LOVES.length && $gifBlock.length) {
+            var item = window.GAME_LOVES[Math.floor(Math.random() * window.GAME_LOVES.length)];
+            var txt = (item.text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            var src = (item.url || item.gif || '');
+            var $content = $gifBlock.find('.gif-block-content');
+            if (!$content.length) $content = $gifBlock;
+            $content.html('<div class="gif-block-inner gif-block-love"><img class="gif-block-img" src="' + src + '" alt="" decoding="async"><p class="gif-block-text">' + txt + '</p></div>');
+            $gifBlock.removeClass('d-none gif-block-sad').addClass('gif-block-visible gif-block-love');
+        }
+
         $arena.css({ opacity: 0, transition: 'opacity 0.4s' });
         setTimeout(function () {
             $arena.addClass('d-none');
             $msg.removeClass('d-none').addClass('show').find('.success-text').text(msg);
         }, 400);
 
-        // Confetti x3
         confetti(); setTimeout(confetti, 1000); setTimeout(confetti, 2200);
+    });
+
+    /* ---- NO click: show random sad gif + text in gifBlock ---- */
+    $(document).on('click', '.game-no', function (e) {
+        var $gifBlock = $('#gifBlock');
+        if (window.GAME_SADS && window.GAME_SADS.length && $gifBlock.length) {
+            var item = window.GAME_SADS[Math.floor(Math.random() * window.GAME_SADS.length)];
+            var txt = (item.text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            var src = (item.url || item.gif || '');
+            var $content = $gifBlock.find('.gif-block-content');
+            if (!$content.length) $content = $gifBlock;
+            $content.html('<div class="gif-block-inner gif-block-sad"><img class="gif-block-img" src="' + src + '" alt="" decoding="async"><p class="gif-block-text">' + txt + '</p></div>');
+            $gifBlock.removeClass('d-none gif-block-love').addClass('gif-block-visible gif-block-sad');
+        }
     });
 
     /* ===========================================

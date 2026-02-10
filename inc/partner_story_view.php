@@ -83,8 +83,8 @@
                             <div id="gameBlock" class="story-block game-block glass-card p-4 mb-3 text-center animate-in" data-success-message="<?= sanitize($block['successMessage'] ?? 'I love you! 💘') ?>" style="animation-delay: <?= $delay ?>s">
                                 <p class="game-question mb-3">Will you be my Valentine? 💘</p>
                                 <div class="game-arena">
-                                    <button class="game-yes"><?= sanitize($block['yesText'] ?? 'YES ❤️') ?></button>
-                                    <button class="game-no"><?= sanitize($block['noText'] ?? 'NO 😒') ?></button>
+                                    <button class="game-yes"><span class="game-btn-sticker"><i class="bi bi-heart-fill"></i></span><span class="game-btn-label"><?= sanitize($block['yesText'] ?? 'Yes') ?></span></button>
+                                    <button class="game-no"><span class="game-btn-sticker"><i class="bi bi-emoji-frown"></i></span><span class="game-btn-label"><?= sanitize($block['noText'] ?? 'No') ?></span></button>
                                 </div>
                                 <div class="game-success-message d-none mt-3"><p class="success-text"></p></div>
                             </div>
