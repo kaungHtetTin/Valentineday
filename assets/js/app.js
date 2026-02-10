@@ -532,19 +532,25 @@ $(function () {
         var msg    = $block.data('success-message');
         var $arena = $block.find('.game-arena');
         var $msg   = $block.find('.game-success-message');
-        var $gifBlock = $('#gifBlock');
+        var $gifBlock = $block.next('.gif-block').length ? $block.next('.gif-block') : $('#gifBlock');
 
         if (window.GAME_LOVES && window.GAME_LOVES.length && $gifBlock.length) {
             var item = window.GAME_LOVES[Math.floor(Math.random() * window.GAME_LOVES.length)];
             var txt = (item.text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
             var src = (item.url || item.gif || '');
+            if (src && !src.match(/^https?:\/\//) && typeof BASE_URL !== 'undefined' && BASE_URL) {
+                src = BASE_URL + '/' + src.replace(/^\//, '');
+            }
             var $content = $gifBlock.find('.gif-block-content');
             if (!$content.length) $content = $gifBlock;
-            var imgHtml = '<div class="gif-block-inner gif-block-love"><div class="gif-loading d-none"><div class="spinner-border spinner-border-sm text-pink"></div></div><img class="gif-block-img" src="' + src + '" alt="" loading="eager" onload="this.parentElement.querySelector(\'.gif-loading\').classList.add(\'d-none\')" onerror="this.parentElement.querySelector(\'.gif-loading\').classList.add(\'d-none\')"><p class="gif-block-text">' + txt + '</p></div>';
+            var imgHtml = '<div class="gif-block-inner gif-block-love"><div class="gif-loading"><div class="spinner-border spinner-border-sm text-pink"></div></div><img class="gif-block-img" src="' + src + '" alt="" loading="eager"><p class="gif-block-text">' + txt + '</p></div>';
             $content.html(imgHtml);
-            $gifBlock.removeClass('d-none gif-block-sad').addClass('gif-block-visible gif-block-love');
-            if (!gifCache[src]) {
-                $content.find('.gif-loading').removeClass('d-none');
+            $gifBlock.removeClass('d-none gif-block-sad').addClass('gif-block-visible gif-block-love').css({opacity: 1, display: 'block'});
+            var $img = $content.find('.gif-block-img');
+            var $loading = $content.find('.gif-loading');
+            $img.on('load', function() { $loading.addClass('d-none'); }).on('error', function() { $loading.addClass('d-none'); });
+            if ($img[0] && $img[0].complete && $img[0].naturalWidth > 0) {
+                $loading.addClass('d-none');
             }
         }
 
@@ -559,18 +565,25 @@ $(function () {
 
     /* ---- NO click: show random sad gif + text in gifBlock ---- */
     $(document).on('click', '.game-no', function (e) {
-        var $gifBlock = $('#gifBlock');
+        var $block = $(this).closest('.game-block');
+        var $gifBlock = $block.next('.gif-block').length ? $block.next('.gif-block') : $('#gifBlock');
         if (window.GAME_SADS && window.GAME_SADS.length && $gifBlock.length) {
             var item = window.GAME_SADS[Math.floor(Math.random() * window.GAME_SADS.length)];
             var txt = (item.text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
             var src = (item.url || item.gif || '');
+            if (src && !src.match(/^https?:\/\//) && typeof BASE_URL !== 'undefined' && BASE_URL) {
+                src = BASE_URL + '/' + src.replace(/^\//, '');
+            }
             var $content = $gifBlock.find('.gif-block-content');
             if (!$content.length) $content = $gifBlock;
-            var imgHtml = '<div class="gif-block-inner gif-block-sad"><div class="gif-loading d-none"><div class="spinner-border spinner-border-sm text-muted"></div></div><img class="gif-block-img" src="' + src + '" alt="" loading="eager" onload="this.parentElement.querySelector(\'.gif-loading\').classList.add(\'d-none\')" onerror="this.parentElement.querySelector(\'.gif-loading\').classList.add(\'d-none\')"><p class="gif-block-text">' + txt + '</p></div>';
+            var imgHtml = '<div class="gif-block-inner gif-block-sad"><div class="gif-loading"><div class="spinner-border spinner-border-sm text-muted"></div></div><img class="gif-block-img" src="' + src + '" alt="" loading="eager"><p class="gif-block-text">' + txt + '</p></div>';
             $content.html(imgHtml);
-            $gifBlock.removeClass('d-none gif-block-love').addClass('gif-block-visible gif-block-sad');
-            if (!gifCache[src]) {
-                $content.find('.gif-loading').removeClass('d-none');
+            $gifBlock.removeClass('d-none gif-block-love').addClass('gif-block-visible gif-block-sad').css({opacity: 1, display: 'block'});
+            var $img = $content.find('.gif-block-img');
+            var $loading = $content.find('.gif-loading');
+            $img.on('load', function() { $loading.addClass('d-none'); }).on('error', function() { $loading.addClass('d-none'); });
+            if ($img[0] && $img[0].complete && $img[0].naturalWidth > 0) {
+                $loading.addClass('d-none');
             }
         }
     });

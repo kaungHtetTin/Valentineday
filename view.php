@@ -219,13 +219,14 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
 
                         <?php elseif ($block['type'] === 'game'): ?>
 
-                            <!-- Separate block: reaction gif + text (filled by JS on YES/NO click) -->
-                            <div id="gifBlock" class="story-block gif-block glass-card p-4 mb-3 text-center d-none animate-in" style="animation-delay: <?= $delay + 0.1 ?>s">
+                                             <!-- Separate block: reaction gif + text (filled by JS on YES/NO click) -->
+                            <div class="story-block gif-block glass-card p-4 mb-3 text-center d-none animate-in" style="animation-delay: <?= $delay + 0.1 ?>s">
                                 <!-- JS fills .gif-block-content with img + text -->
                                 <div class="gif-block-content"></div>
                             </div>
 
-                            <div id="gameBlock" class="story-block game-block glass-card p-4 mb-3 text-center animate-in"
+                            
+                            <div class="story-block game-block glass-card p-4 mb-3 text-center animate-in"
                                  data-success-message="<?= sanitize($block['successMessage'] ?? 'I love you! 💘') ?>"
                                  style="animation-delay: <?= $delay ?>s">
 
@@ -241,6 +242,7 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
                                 </div>
                             </div>
 
+           
                         <?php endif; ?>
 
                     <?php endforeach; ?>
@@ -261,11 +263,16 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
     <script>
         window.GAME_LOVES = <?= json_encode($loves) ?>;
         window.GAME_SADS  = <?= json_encode($sads) ?>;
-        // Preload GIFs immediately
+        <?php if (defined('BASE_URL')): ?>window.BASE_URL = <?= json_encode(rtrim(BASE_URL, '/')) ?>;<?php endif; ?>
+        // Preload GIFs immediately with correct paths
         (function() {
+            var base = (typeof BASE_URL !== 'undefined' && BASE_URL) ? BASE_URL + '/' : '';
             var allGifs = [].concat(window.GAME_LOVES || [], window.GAME_SADS || []);
             allGifs.forEach(function(item) {
                 var src = (item.url || item.gif || '');
+                if (src && !src.match(/^https?:\/\//)) {
+                    src = base + src.replace(/^\//, '');
+                }
                 if (src) {
                     var img = new Image();
                     img.src = src;
