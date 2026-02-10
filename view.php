@@ -82,6 +82,8 @@ if (!$story) {
 
 $storyData = decodeStory($story['story_json']);
 $blocks = isset($storyData['blocks']) ? $storyData['blocks'] : [];
+$couple = isset($storyData['couple']) ? $storyData['couple'] : [];
+$hasCoupleData = !empty($couple['yourPhoto']) || !empty($couple['partnerPhoto']) || !empty($couple['anniversaryDate']);
 $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
 ?>
 <!DOCTYPE html>
@@ -122,7 +124,33 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
                 </div>
 
                 <div class="story-view theme-<?= sanitize($theme) ?>" id="storyView">
-                    <?php foreach ($blocks as $i => $block): ?>
+                    <?php if ($hasCoupleData): ?>
+                        <div class="story-block couple-block glass-card p-4 mb-3 text-center animate-in" style="animation-delay: 0s">
+                            <div class="couple-photos-row">
+                                <?php if (!empty($couple['yourPhoto'])): ?>
+                                    <div class="couple-avatar"><img src="<?= sanitize($couple['yourPhoto']) ?>" alt="You"></div>
+                                <?php else: ?>
+                                    <div class="couple-avatar couple-avatar-empty"><i class="bi bi-person-fill"></i></div>
+                                <?php endif; ?>
+                                <div class="couple-heart-divider"><i class="bi bi-heart-fill"></i></div>
+                                <?php if (!empty($couple['partnerPhoto'])): ?>
+                                    <div class="couple-avatar"><img src="<?= sanitize($couple['partnerPhoto']) ?>" alt="Partner"></div>
+                                <?php else: ?>
+                                    <div class="couple-avatar couple-avatar-empty"><i class="bi bi-person-heart"></i></div>
+                                <?php endif; ?>
+                            </div>
+                            <?php if (!empty($couple['anniversaryDate'])): ?>
+                                <div class="couple-counter mt-3" data-date="<?= sanitize($couple['anniversaryDate']) ?>">
+                                    <p class="couple-counter-label mb-1">Together for</p>
+                                    <p class="couple-counter-value mb-0"><span class="counter-days">--</span> days</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php foreach ($blocks as $i => $block):
+                        $delay = $hasCoupleData ? ($i + 1) * 0.3 : $i * 0.3;
+                    ?>
 
                         <?php if ($block['type'] === 'text'): ?>
                             <div class="story-block text-block glass-card p-4 mb-3 text-center animate-in" style="animation-delay: <?= $i * 0.3 ?>s">
@@ -190,15 +218,9 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
                             </div>
 
                         <?php elseif ($block['type'] === 'game'): ?>
-                               <!-- Separate block: reaction gif + text (filled by JS on YES/NO click) -->
-                            <div id="gifBlock" class="story-block gif-block glass-card p-4 mb-3 text-center d-none animate-in">
-                                <!-- JS fills .gif-block-content with img + text -->
-                                <div class="gif-block-content"></div>
-                            </div>
-
                             <div id="gameBlock" class="story-block game-block glass-card p-4 mb-3 text-center animate-in"
                                  data-success-message="<?= sanitize($block['successMessage'] ?? 'I love you! 💘') ?>"
-                                 style="animation-delay: <?= $i * 0.3 ?>s">
+                                 style="animation-delay: <?= $delay ?>s">
 
                                 <p class="game-question mb-3">Will you be my Valentine? 💘</p>
 
@@ -210,6 +232,12 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
                                 <div class="game-success-message d-none mt-3">
                                     <p class="success-text"></p>
                                 </div>
+                            </div>
+
+                            <!-- Separate block: reaction gif + text (filled by JS on YES/NO click) -->
+                            <div id="gifBlock" class="story-block gif-block glass-card p-4 mb-3 text-center d-none animate-in" style="animation-delay: <?= $delay + 0.1 ?>s">
+                                <!-- JS fills .gif-block-content with img + text -->
+                                <div class="gif-block-content"></div>
                             </div>
 
                         <?php endif; ?>
