@@ -21,20 +21,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         || !empty($_FILES['payment_screenshot']['tmp_name'])
     );
     if (empty($_POST) && empty($fileSent) && isset($_GET['key'])) {
-        $error = 'Upload or form data too large. Use an image under 10MB and try again.';
+        $error = 'ဓာတ်ပုံ သို့မဟုတ် ဒေတာ ကြီးလွန်းပါတယ်။ ၁၀ MB အောက် ဓာတ်ပုံ သုံးပြီး ထပ်ကြိုးစားပါ။';
         $key = trim($_GET['key']);
     } elseif (empty($key)) {
-        $error = 'Invalid link. Please use the link sent to you.';
+        $error = 'လင့်ခ် မမှန်ပါ။ သင့်ကို ပို့ထားတဲ့ လင့်ခ်ကို သုံးပါ။';
     } elseif (!isset($_FILES['payment_screenshot']) || $_FILES['payment_screenshot']['error'] === UPLOAD_ERR_NO_FILE) {
-        $error = 'Please upload your payment screenshot.';
+        $error = 'ငွေပေးချေထားတဲ့ ဓာတ်ပုံ စခရင်ရော့ တင်ပါ။';
     } else {
         $story = getStoryByKey($pdo, $key);
         if (!$story) {
-            $error = 'This story link is invalid or has been removed.';
+            $error = 'ဒီ ဇာတ်လမ်း လင့်ခ်က မမှန်ပါ သို့မဟုတ် ဖျက်ပြီးသား ဖြစ်နိုင်ပါတယ်။';
         } else {
             $upload = uploadImage($_FILES['payment_screenshot']);
             if (!$upload['success']) {
-                $error = $upload['message'] ?? 'Payment screenshot upload failed.';
+                $error = $upload['message'] ?? 'ငွေပေးချေ ဓာတ်ပုံ တင်မရပါ။';
             } else {
                 try {
                     $token = generateUnlockToken();
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $statusUrl = BASE_URL . '/view.php?token=' . $token;
                     $success = true;
                 } catch (Exception $e) {
-                    $error = 'Something went wrong. Please try again.';
+                    $error = 'အမှားတစ်ခု ဖြစ်သွားပါတယ်။ ထပ်ကြိုးစားပါ။';
                 }
             }
         }
@@ -82,7 +82,7 @@ if (!$success) {
     $storyData = decodeStory($story['story_json']);
     $blocks = isset($storyData['blocks']) ? $storyData['blocks'] : [];
     // Teaser: first text block truncated, or generic message
-    $teaserText = 'Someone made something special for you 💖';
+    $teaserText = 'သင့်အတွက် အထူး တစ်ခုခု ဖန်တီးထားပါတယ် 💖';
     foreach ($blocks as $b) {
         if (isset($b['type']) && $b['type'] === 'text' && !empty($b['value'])) {
             $teaserText = mb_substr(strip_tags($b['value']), 0, 120);
@@ -93,11 +93,11 @@ if (!$success) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unlock Your Story – LoveFun 💖</title>
+    <title>သင့်ဇာတ်လမ်း ဖွင့်ပါ – LoveFun 💖</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -118,55 +118,55 @@ if (!$success) {
                     <!-- Success: payment received, pending admin approval -->
                     <div class="glass-card p-4 text-center animate-in">
                         <div style="font-size: 3rem; margin-bottom: 0.5rem;">✅</div>
-                        <h3 class="fw-bold font-heading mb-2">Payment received</h3>
-                        <p class="text-muted mb-3">We’re verifying your payment. Once approved, your story will appear on this same link – no second link to open (usually within 24 hours).</p>
-                        <p class="small text-muted mb-2">Save this link – it’s your only link for status and story:</p>
+                        <h3 class="fw-bold font-heading mb-2">ငွေလက်ခံပြီး</h3>
+                        <p class="text-muted mb-3">သင့်ငွေပေးချေမှုကို စစ်ဆေးနေပါတယ်။ အတည်ပြုပြီးရင် ဒီလင့်ခ်မှာပဲ ဇာတ်လမ်း ပေါ်မယ် – ဒုတိယ လင့်ခ် မလိုပါ (ပုံမှန် ၂၄ နာရီအတွင်း)။</p>
+                        <p class="small text-muted mb-2">ဒီလင့်ခ်ကို သိမ်းထားပါ – အခြေအနေနဲ့ ဇာတ်လမ်း ကြည့်ဖို့ ဒီလင့်ခ်ပဲ ရပါမယ်။</p>
                         <div class="input-group mb-3" style="border-radius: 14px; overflow: hidden;">
                             <input type="text" id="statusLink" class="form-control" value="<?= htmlspecialchars($statusUrl) ?>" readonly style="border-radius: 14px 0 0 14px;">
                             <button class="btn btn-pink px-4" type="button" id="copyStatusLink" style="border-radius: 0 14px 14px 0;">
-                                <i class="bi bi-clipboard me-1"></i>Copy
+                                <i class="bi bi-clipboard me-1"></i>ကူးပါ
                             </button>
                         </div>
                         <a href="<?= htmlspecialchars($statusUrl) ?>" class="btn btn-outline-secondary px-4">
-                            <i class="bi bi-box-arrow-up-right me-2"></i>Check status now
+                            <i class="bi bi-box-arrow-up-right me-2"></i>အခြေအနေ ယခု ကြည့်ပါ
                         </a>
                     </div>
                 <?php else: ?>
                     <!-- Preview story teaser -->
                     <div class="glass-card p-4 mb-4 text-center animate-in">
                         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔐</div>
-                        <h3 class="fw-bold font-heading mb-2">Unlock Your Story</h3>
+                        <h3 class="fw-bold font-heading mb-2">သင့်ဇာတ်လမ်း ဖွင့်ပါ</h3>
                         <p class="text-muted mb-0"><?= nl2br(htmlspecialchars($teaserText)) ?></p>
                     </div>
 
                     <!-- Payment method -->
                     <div class="glass-card p-4 mb-4 animate-in">
-                        <h5 class="fw-bold font-heading mb-3"><i class="bi bi-bank me-2"></i>Payment information</h5>
-                        <p class="mb-1"><strong>Banking</strong> — KBZpay, WavePay</p>
-                        <p class="mb-1"><strong>Account No</strong> — 09688683805</p>
-                        <p class="mb-0"><strong>Account Name</strong> — Min Htet Kyaw</p>
-                        <p class="small text-muted mt-2 mb-0">Pay using the above details, then upload your payment screenshot below.</p>
+                        <h5 class="fw-bold font-heading mb-3"><i class="bi bi-bank me-2"></i>ငွေပေးချေမှု အချက်အလက်</h5>
+                        <p class="mb-1"><strong>ဘဏ်/ငွေပေးစနစ်</strong> — KBZpay, WavePay</p>
+                        <p class="mb-1"><strong>အကောင့်နံပါတ်</strong> — 09688683805</p>
+                        <p class="mb-0"><strong>အကောင့်အမည်</strong> — Min Htet Kyaw</p>
+                        <p class="small text-muted mt-2 mb-0">အပေါ်က အချက်တွေနဲ့ ငွေပေးပြီး အောက်က ငွေပေးချေ ဓာတ်ပုံ စခရင်ရော့ တင်ပါ။</p>
                     </div>
 
                     <!-- Unlock form -->
                     <div class="glass-card p-4 animate-in">
-                        <h5 class="fw-bold font-heading mb-3">Upload payment screenshot</h5>
+                        <h5 class="fw-bold font-heading mb-3">ငွေပေးချေ ဓာတ်ပုံ စခရင်ရော့ တင်ပါ</h5>
                         <?php if ($error): ?>
                             <div class="alert alert-danger py-2 mb-3"><?= htmlspecialchars($error) ?></div>
                         <?php endif; ?>
                         <form method="post" action="unlock.php?key=<?= htmlspecialchars(urlencode($key)) ?>" enctype="multipart/form-data" id="unlockForm">
                             <input type="hidden" name="key" value="<?= htmlspecialchars($key) ?>">
                             <div class="mb-4">
-                                <label class="form-label fw-semibold">Payment screenshot</label>
+                                <label class="form-label fw-semibold">ငွေပေးချေ ဓာတ်ပုံ စခရင်ရော့</label>
                                 <input type="file" name="payment_screenshot" id="paymentScreenshot" class="form-control form-control-lg" accept="image/*" required style="border-radius: 14px;">
-                                <small class="text-muted d-block mt-1">Any image format (JPG, PNG, GIF, WEBP, BMP, TIFF, SVG, HEIC, etc.). Max 10MB.</small>
+                                <small class="text-muted d-block mt-1">ဓာတ်ပုံ ပုံစံ မည်သည်မဆို (JPG, PNG, GIF, WEBP, BMP, TIFF, SVG, HEIC စသည်)။ အများဆုံး ၁၀ MB။</small>
                                 <div id="screenshotPreview" class="mt-3 text-center d-none">
-                                    <p class="small text-muted mb-2">Preview</p>
-                                    <img id="screenshotPreviewImg" src="" alt="Preview" class="rounded border" style="max-width:100%; max-height:220px; object-fit:contain; background:#f8f9fa;">
+                                    <p class="small text-muted mb-2">ကြိုကြည့်ခြင်း</p>
+                                    <img id="screenshotPreviewImg" src="" alt="ကြိုကြည့်ခြင်း" class="rounded border" style="max-width:100%; max-height:220px; object-fit:contain; background:#f8f9fa;">
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-pink btn-lg w-100 py-3">
-                                <i class="bi bi-unlock-fill me-2"></i>Unlock &amp; View Story
+                                <i class="bi bi-unlock-fill me-2"></i>ဖွင့်ပြီး ဇာတ်လမ်း ကြည့်ပါ
                             </button>
                         </form>
                     </div>
@@ -209,7 +209,7 @@ if (!$success) {
             navigator.clipboard.writeText(el.value).then(function() {
                 var btn = document.getElementById('copyStatusLink');
                 var orig = btn.innerHTML;
-                btn.innerHTML = '<i class="bi bi-check-lg me-1"></i>Copied!';
+                btn.innerHTML = '<i class="bi bi-check-lg me-1"></i>ကူးပြီး!';
                 setTimeout(function() { btn.innerHTML = orig; }, 2000);
             });
         });

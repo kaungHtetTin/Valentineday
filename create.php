@@ -19,11 +19,11 @@ if ($editKey) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Your Story – LoveFun 💖</title>
+    <title>သင့်ဇာတ်လမ်း ဖန်တီးပါ – LoveFun 💖</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -46,15 +46,15 @@ if ($editKey) {
             </div>
             <div class="progress-step active" data-step="1">
                 <div class="step-dot">1</div>
-                <span class="step-label">Your Story</span>
+                <span class="step-label">သင့်ဇာတ်လမ်း</span>
             </div>
             <div class="progress-step" data-step="2">
                 <div class="step-dot">2</div>
-                <span class="step-label">Add Blocks</span>
+                <span class="step-label">ဘလော့ခ်များ ထည့်ပါ</span>
             </div>
             <div class="progress-step" data-step="3">
                 <div class="step-dot">3</div>
-                <span class="step-label">Preview & Share</span>
+                <span class="step-label">ကြိုကြည့်ပါ နဲ့ မျှဝေပါ</span>
             </div>
         </div>
 
@@ -63,17 +63,17 @@ if ($editKey) {
 
                 <!-- Been Together (Optional) -->
                 <div class="glass-card p-4 mb-4" id="coupleSection">
-                    <h5 class="fw-bold font-heading mb-1"><i class="bi bi-hearts me-2"></i>Been Together</h5>
-                    <p class="text-muted small mb-3">Optional — add your photos and anniversary date</p>
+                    <h5 class="fw-bold font-heading mb-1"><i class="bi bi-hearts me-2"></i>ချစ်သူစဖြစ်တဲ့နေ့ (Been Together)</h5>
+                    <p class="text-muted small mb-3">ထည့်ချင်ရင် ထည့်ပါ — ဓာတ်ပုံတွေနဲ့ နှစ်လည်နေ့ ထည့်နိုင်ပါတယ်</p>
 
                     <div class="row g-3 mb-3">
                         <!-- Your Photo -->
                         <div class="col-6">
-                            <label class="form-label small fw-bold">Your Photo</label>
+                            <label class="form-label small fw-bold">သင့်ဓာတ်ပုံ</label>
                             <div class="couple-photo-box" id="yourPhotoBox">
                                 <div class="couple-photo-placeholder" id="yourPhotoPlaceholder">
                                     <i class="bi bi-person-fill"></i>
-                                    <span>Tap to add</span>
+                                    <span>နှိပ်ပြီး ထည့်ပါ</span>
                                 </div>
                                 <img src="" alt="" class="couple-photo-img d-none" id="yourPhotoImg">
                                 <input type="hidden" id="yourPhotoUrl">
@@ -82,11 +82,11 @@ if ($editKey) {
 
                         <!-- Partner Photo -->
                         <div class="col-6">
-                            <label class="form-label small fw-bold">Partner's Photo</label>
+                            <label class="form-label small fw-bold">ချစ်သူဓာတ်ပုံ</label>
                             <div class="couple-photo-box" id="partnerPhotoBox">
                                 <div class="couple-photo-placeholder" id="partnerPhotoPlaceholder">
                                     <i class="bi bi-person-heart"></i>
-                                    <span>Tap to add</span>
+                                    <span>နှိပ်ပြီး ထည့်ပါ</span>
                                 </div>
                                 <img src="" alt="" class="couple-photo-img d-none" id="partnerPhotoImg">
                                 <input type="hidden" id="partnerPhotoUrl">
@@ -96,7 +96,7 @@ if ($editKey) {
 
                     <!-- Anniversary Date -->
                     <div>
-                        <label class="form-label small fw-bold"><i class="bi bi-calendar-heart me-1"></i>Anniversary Date</label>
+                        <label class="form-label small fw-bold"><i class="bi bi-calendar-heart me-1"></i>နှစ်ပတ်လည်နေ့</label>
                         <input type="date" class="form-control" id="anniversaryDate"
                                style="border: 2px solid rgba(233,30,99,0.1); border-radius: 14px; padding: 12px 16px;">
                     </div>
@@ -111,26 +111,26 @@ if ($editKey) {
                     <!-- Empty state shown initially -->
                     <div class="empty-state glass-card p-5 mb-3" id="emptyState">
                         <div class="empty-state-icon">💌</div>
-                        <p class="fw-bold mb-1" style="color: var(--text-muted);">Your story is empty</p>
-                        <p class="small" style="color: var(--text-light);">Add your first block below to begin</p>
+                        <p class="fw-bold mb-1" style="color: var(--text-muted);">Story Line များကို ထည့်သွင်းပါ</p>
+                        <p class="small" style="color: var(--text-light);">စတင်ဖန်တီးရန် အောက်မှ ဘလော့ခ်များကို ထည့်သွင်းပါ</p>
                     </div>
                 </div>
 
                 <!-- Add Block Buttons -->
                 <div class="glass-card p-4 mb-4 text-center">
-                    <p class="fw-bold font-heading mb-3" style="font-size:1.05rem;">Add a Block</p>
+                    <p class="fw-bold font-heading mb-3" style="font-size:1.05rem;">ဘလော့ခ် တစ်ခု ထည့်ပါ</p>
                     <div class="d-flex justify-content-center gap-3 flex-wrap">
                         <button type="button" class="add-block-btn" id="addTextBlock">
-                            <i class="bi bi-chat-quote-fill d-block mb-1"></i>Text
+                            <i class="bi bi-chat-quote-fill d-block mb-1"></i>စာသား
                         </button>
                         <button type="button" class="add-block-btn" id="addPhotoBlock">
-                            <i class="bi bi-image-fill d-block mb-1"></i>Photo
+                            <i class="bi bi-image-fill d-block mb-1"></i>ဓာတ်ပုံ
                         </button>
                         <button type="button" class="add-block-btn" id="addAudioBlock">
-                            <i class="bi bi-music-note-beamed d-block mb-1"></i>Audio
+                            <i class="bi bi-music-note-beamed d-block mb-1"></i>အသံ
                         </button>
                         <button type="button" class="add-block-btn" id="addGameBlock">
-                            <i class="bi bi-joystick d-block mb-1"></i>Yes / No Game
+                            <i class="bi bi-joystick d-block mb-1"></i>ဟုတ် / မဟုတ် ဂိမ်း
                         </button>
                     </div>
                 </div>
@@ -138,15 +138,15 @@ if ($editKey) {
                 <!-- Actions -->
                 <div class="d-flex justify-content-between align-items-center mb-5">
                     <a href="index.php" class="btn btn-outline-secondary px-4" style="border-radius:50px;">
-                        <i class="bi bi-arrow-left me-1"></i>Back
+                        <i class="bi bi-arrow-left me-1"></i>နောက်ပြန်
                     </a>
                     <button type="button" id="previewBtn" class="btn btn-pink px-5 py-3">
-                        <i class="bi bi-eye-fill me-2"></i>Preview & Share
+                        <i class="bi bi-eye-fill me-2"></i>ကြိုကြည့်ပါ နဲ့ မျှဝေပါ
                     </button>
                 </div>
 
                 <p class="text-center text-muted small mb-3">
-                    <i class="bi bi-shield-check me-1"></i>No account needed &middot; Free to use &middot; Shareable link
+                    <i class="bi bi-shield-check me-1"></i>အကောင့် မလိုပါ &middot; အခမဲ့ &middot; လင့်ခ် မျှဝေလို့ ရပါတယ်
                 </p>
             </div>
         </div>

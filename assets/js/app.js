@@ -48,43 +48,43 @@ $(function () {
             if (b.type === 'text') {
                 var $textCard = $(
                     '<div class="card block-card p-4 mb-3" data-block-id="'+id+'" data-type="text">' +
-                    '<button type="button" class="block-remove" title="Remove">&times;</button>' +
-                    '<span class="badge bg-info block-type-badge mb-2"><i class="bi bi-chat-quote-fill me-1"></i>Text</span>' +
-                    '<textarea class="form-control block-value" rows="3" placeholder="Write something sweet…"></textarea>' +
+                    '<button type="button" class="block-remove" title="ဖယ်ရှားပါ">&times;</button>' +
+                    '<span class="badge bg-info block-type-badge mb-2"><i class="bi bi-chat-quote-fill me-1"></i>စာသား</span>' +
+                    '<textarea class="form-control block-value" rows="3" placeholder="ချစ်စာလေး ရေးပါ…"></textarea>' +
                     '</div>');
                 $textCard.find('.block-value').val(b.value || '');
                 $('#blocksContainer').append($textCard);
             } else if (b.type === 'photo') {
                 $('#blocksContainer').append(
                     '<div class="card block-card p-4 mb-3" data-block-id="'+id+'" data-type="photo">' +
-                    '<button type="button" class="block-remove" title="Remove">&times;</button>' +
-                    '<span class="badge bg-success block-type-badge mb-2"><i class="bi bi-image-fill me-1"></i>Photo</span>' +
+                    '<button type="button" class="block-remove" title="ဖယ်ရှားပါ">&times;</button>' +
+                    '<span class="badge bg-success block-type-badge mb-2"><i class="bi bi-image-fill me-1"></i>ဓာတ်ပုံ</span>' +
                     '<div class="text-center py-3">' +
                     '<div class="photo-preview mb-3 d-none"><img src="" alt="" class="photo-preview-img"></div>' +
-                    '<button type="button" class="add-block-btn choose-photo px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>Upload Photo</button>' +
+                    '<button type="button" class="add-block-btn choose-photo px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>ဓာတ်ပုံ တင်ပါ</button>' +
                     '<input type="hidden" class="block-value">' +
-                    '<div class="upload-progress d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>Uploading…</small></div></div>' +
+                    '<div class="upload-progress d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>တင်နေပါတယ်…</small></div></div>' +
                     '</div></div>');
                 var $last = $('#blocksContainer .block-card[data-type="photo"]').last();
                 if (b.url) {
                     $last.find('.block-value').val(b.url);
                     $last.find('.photo-preview-img').attr('src', b.url);
                     $last.find('.photo-preview').removeClass('d-none');
-                    $last.find('.choose-photo').html('<i class="bi bi-arrow-repeat me-1"></i>Change');
+                    $last.find('.choose-photo').html('<i class="bi bi-arrow-repeat me-1"></i>ပြောင်းပါ');
                 }
             } else if (b.type === 'audio') {
                 var $aud = $(
                     '<div class="card block-card p-4 mb-3" data-block-id="'+id+'" data-type="audio">' +
-                    '<button type="button" class="block-remove" title="Remove">&times;</button>' +
-                    '<span class="badge bg-purple block-type-badge mb-2"><i class="bi bi-music-note-beamed me-1"></i>Audio</span>' +
-                    '<div class="mb-3"><label class="form-label small fw-bold">Caption <span class="text-muted fw-normal">(optional)</span></label>' +
-                    '<input type="text" class="form-control audio-caption" placeholder="Our song, a voice note…"></div>' +
+                    '<button type="button" class="block-remove" title="ဖယ်ရှားပါ">&times;</button>' +
+                    '<span class="badge bg-purple block-type-badge mb-2"><i class="bi bi-music-note-beamed me-1"></i>အသံ</span>' +
+                    '<div class="mb-3"><label class="form-label small fw-bold">ခေါင်းစဉ် <span class="text-muted fw-normal">(ထည့်မယ်ဆိုရင်)</span></label>' +
+                    '<input type="text" class="form-control audio-caption" placeholder="သီချင်းလေး၊ အသံမှတ်စု…"></div>' +
                     '<div class="text-center py-3">' +
                     '<div class="audio-preview mb-3"></div>' +
-                    '<button type="button" class="add-block-btn choose-audio px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>Upload Audio</button>' +
+                    '<button type="button" class="add-block-btn choose-audio px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>အသံ တင်ပါ</button>' +
                     '<input type="hidden" class="block-value">' +
-                    '<div class="upload-progress-audio d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>Uploading…</small></div></div>' +
-                    '<p class="text-muted small mt-2 mb-0"><i class="bi bi-info-circle me-1"></i>MP3 only — max 10MB</p>' +
+                    '<div class="upload-progress-audio d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>တင်နေပါတယ်…</small></div></div>' +
+                    '<p class="text-muted small mt-2 mb-0"><i class="bi bi-info-circle me-1"></i>MP3 ပဲ — အများဆုံး ၁၀ MB</p>' +
                     '</div></div>');
                 $aud.find('.audio-caption').val(b.caption || '');
                 $aud.find('.block-value').val(b.url || '');
@@ -93,23 +93,23 @@ $(function () {
                     var $preview = $aud.find('.audio-preview');
                     $preview.html(buildCustomPlayerHtml()).removeClass('d-none');
                     $preview.find('.lf-audio-src').attr('src', b.url);
-                    $preview.find('.lf-track-title').text(b.caption || 'Uploaded audio');
+                    $preview.find('.lf-track-title').text(b.caption || 'တင်ထားသော အသံ');
                     initCustomPlayer($preview);
-                    $aud.find('.choose-audio').html('<i class="bi bi-arrow-repeat me-1"></i>Change');
+                    $aud.find('.choose-audio').html('<i class="bi bi-arrow-repeat me-1"></i>ပြောင်းပါ');
                 }
             } else if (b.type === 'game') {
                 $('#blocksContainer').append(
                     '<div class="card block-card p-4 mb-3" data-block-id="'+id+'" data-type="game">' +
-                    '<button type="button" class="block-remove" title="Remove">&times;</button>' +
-                    '<span class="badge bg-danger block-type-badge mb-2"><i class="bi bi-joystick me-1"></i>Yes / No Game</span>' +
-                    '<div class="row g-3 mb-3"><div class="col-6"><label class="form-label small fw-bold">Yes Button</label><input type="text" class="form-control game-yes-text" value="YES ❤️"></div>' +
-                    '<div class="col-6"><label class="form-label small fw-bold">No Button</label><input type="text" class="form-control game-no-text" value="NO 😒"></div></div>' +
-                    '<div><label class="form-label small fw-bold">Message After "Yes"</label><input type="text" class="form-control game-success-msg" value="See you on Valentine 💘"></div>' +
+                    '<button type="button" class="block-remove" title="ဖယ်ရှားပါ">&times;</button>' +
+                    '<span class="badge bg-danger block-type-badge mb-2"><i class="bi bi-joystick me-1"></i>ဟုတ် / မဟုတ် ဂိမ်း</span>' +
+                    '<div class="row g-3 mb-3"><div class="col-6"><label class="form-label small fw-bold">ဟုတ် ခလုတ်</label><input type="text" class="form-control game-yes-text" value="ဟုတ်ပါ ❤️"></div>' +
+                    '<div class="col-6"><label class="form-label small fw-bold">မဟုတ် ခလုတ်</label><input type="text" class="form-control game-no-text" value="မဟုတ်ပါ 😒"></div></div>' +
+                    '<div><label class="form-label small fw-bold">ဟုတ်လို့ ပြန်ပြောတဲ့ စာ</label><input type="text" class="form-control game-success-msg" value="ချစ်သူများနေ့မှာ တွေ့မယ် 💘"></div>' +
                     '</div>');
                 var $game = $('#blocksContainer .block-card[data-type="game"]').last();
-                $game.find('.game-yes-text').val(b.yesText || 'YES ❤️');
-                $game.find('.game-no-text').val(b.noText || 'NO 😒');
-                $game.find('.game-success-msg').val(b.successMessage || 'See you on Valentine 💘');
+                $game.find('.game-yes-text').val(b.yesText || 'ဟုတ်ပါ ❤️');
+                $game.find('.game-no-text').val(b.noText || 'မဟုတ်ပါ 😒');
+                $game.find('.game-success-msg').val(b.successMessage || 'ချစ်သူများနေ့မှာ တွေ့မယ် 💘');
             }
         });
         blockId = blocks.length + 1;
@@ -152,13 +152,13 @@ $(function () {
                     $img.attr('src', r.url).removeClass('d-none');
                     $placeholder.addClass('d-none');
                 } else {
-                    alert(r.message||'Upload failed.');
-                    $placeholder.html('<i class="bi bi-' + (who === 'your' ? 'person-fill' : 'person-heart') + '"></i><span>Tap to add</span>');
+                    alert(r.message||'တင်မရပါ။');
+                    $placeholder.html('<i class="bi bi-' + (who === 'your' ? 'person-fill' : 'person-heart') + '"></i><span>နှိပ်ပြီး ထည့်ပါ</span>');
                 }
             },
             error: function () {
-                alert('Upload failed.');
-                $placeholder.html('<i class="bi bi-' + (who === 'your' ? 'person-fill' : 'person-heart') + '"></i><span>Tap to add</span>');
+                alert('တင်မရပါ။');
+                $placeholder.html('<i class="bi bi-' + (who === 'your' ? 'person-fill' : 'person-heart') + '"></i><span>နှိပ်ပြီး ထည့်ပါ</span>');
             }
         });
     }
@@ -167,9 +167,9 @@ $(function () {
         blockId++;
         $('#blocksContainer').append(
             '<div class="card block-card p-4 mb-3" data-block-id="'+blockId+'" data-type="text">' +
-            '<button type="button" class="block-remove" title="Remove">&times;</button>' +
-            '<span class="badge bg-info block-type-badge mb-2"><i class="bi bi-chat-quote-fill me-1"></i>Text</span>' +
-            '<textarea class="form-control block-value" rows="3" placeholder="Write something sweet…"></textarea>' +
+            '<button type="button" class="block-remove" title="ဖယ်ရှားပါ">&times;</button>' +
+            '<span class="badge bg-info block-type-badge mb-2"><i class="bi bi-chat-quote-fill me-1"></i>စာသား</span>' +
+            '<textarea class="form-control block-value" rows="3" placeholder="ချစ်စာလေး ရေးပါ…"></textarea>' +
             '</div>');
         updateProgress();
     });
@@ -179,13 +179,13 @@ $(function () {
         blockId++;
         $('#blocksContainer').append(
             '<div class="card block-card p-4 mb-3" data-block-id="'+blockId+'" data-type="photo">' +
-            '<button type="button" class="block-remove" title="Remove">&times;</button>' +
-            '<span class="badge bg-success block-type-badge mb-2"><i class="bi bi-image-fill me-1"></i>Photo</span>' +
+            '<button type="button" class="block-remove" title="ဖယ်ရှားပါ">&times;</button>' +
+            '<span class="badge bg-success block-type-badge mb-2"><i class="bi bi-image-fill me-1"></i>ဓာတ်ပုံ</span>' +
             '<div class="text-center py-3">' +
             '<div class="photo-preview mb-3 d-none"><img src="" alt="" class="photo-preview-img"></div>' +
-            '<button type="button" class="add-block-btn choose-photo px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>Upload Photo</button>' +
+            '<button type="button" class="add-block-btn choose-photo px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>ဓာတ်ပုံ တင်ပါ</button>' +
             '<input type="hidden" class="block-value">' +
-            '<div class="upload-progress d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>Uploading…</small></div></div>' +
+            '<div class="upload-progress d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>တင်နေပါတယ်…</small></div></div>' +
             '</div></div>');
         updateProgress();
     });
@@ -204,10 +204,10 @@ $(function () {
         $.ajax({ url:'save.php?action=upload', type:'POST', data:fd, processData:false, contentType:false,
             success: function (r) {
                 $b.find('.upload-progress').addClass('d-none');
-                if (r.success) { $b.find('.block-value').val(r.url); $b.find('.photo-preview').removeClass('d-none').find('img').attr('src',r.url); $b.find('.choose-photo').html('<i class="bi bi-arrow-repeat me-1"></i>Change').removeClass('d-none'); }
-                else { alert(r.message||'Upload failed.'); $b.find('.choose-photo').removeClass('d-none'); }
+                if (r.success) { $b.find('.block-value').val(r.url); $b.find('.photo-preview').removeClass('d-none').find('img').attr('src',r.url); $b.find('.choose-photo').html('<i class="bi bi-arrow-repeat me-1"></i>ပြောင်းပါ').removeClass('d-none'); }
+                else { alert(r.message||'တင်မရပါ။'); $b.find('.choose-photo').removeClass('d-none'); }
             },
-            error: function () { $b.find('.upload-progress,.choose-photo').toggleClass('d-none'); alert('Upload failed.'); }
+            error: function () { $b.find('.upload-progress,.choose-photo').toggleClass('d-none'); alert('တင်မရပါ။'); }
         });
     });
 
@@ -221,7 +221,7 @@ $(function () {
                 '<div class="lf-player-top">' +
                     '<div class="lf-disc-wrap"><div class="lf-disc"><div class="lf-disc-inner"></div></div></div>' +
                     '<div class="lf-player-info">' +
-                        '<p class="lf-track-title">Uploaded audio</p>' +
+                        '<p class="lf-track-title">တင်ထားသော အသံ</p>' +
                         '<div class="lf-equalizer"><span class="lf-eq-bar"></span><span class="lf-eq-bar"></span><span class="lf-eq-bar"></span><span class="lf-eq-bar"></span><span class="lf-eq-bar"></span></div>' +
                     '</div>' +
                 '</div>' +
@@ -306,16 +306,16 @@ $(function () {
         blockId++;
         $('#blocksContainer').append(
             '<div class="card block-card p-4 mb-3" data-block-id="'+blockId+'" data-type="audio">' +
-            '<button type="button" class="block-remove" title="Remove">&times;</button>' +
-            '<span class="badge bg-purple block-type-badge mb-2"><i class="bi bi-music-note-beamed me-1"></i>Audio</span>' +
-            '<div class="mb-3"><label class="form-label small fw-bold">Caption <span class="text-muted fw-normal">(optional)</span></label>' +
-            '<input type="text" class="form-control audio-caption" placeholder="Our song, a voice note…"></div>' +
+            '<button type="button" class="block-remove" title="ဖယ်ရှားပါ">&times;</button>' +
+            '<span class="badge bg-purple block-type-badge mb-2"><i class="bi bi-music-note-beamed me-1"></i>အသံ</span>' +
+            '<div class="mb-3"><label class="form-label small fw-bold">ခေါင်းစဉ် <span class="text-muted fw-normal">(ထည့်မယ်ဆိုရင်)</span></label>' +
+            '<input type="text" class="form-control audio-caption" placeholder="သီချင်းလေး၊ အသံမှတ်စု…"></div>' +
             '<div class="text-center py-3">' +
             '<div class="audio-preview mb-3 d-none"></div>' +
-            '<button type="button" class="add-block-btn choose-audio px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>Upload Audio</button>' +
+            '<button type="button" class="add-block-btn choose-audio px-4"><i class="bi bi-cloud-arrow-up-fill d-block mb-1" style="font-size:1.5rem"></i>အသံ တင်ပါ</button>' +
             '<input type="hidden" class="block-value">' +
-            '<div class="upload-progress-audio d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>Uploading…</small></div></div>' +
-            '<p class="text-muted small mt-2 mb-0"><i class="bi bi-info-circle me-1"></i>MP3 only — max 10MB</p>' +
+            '<div class="upload-progress-audio d-none mt-3"><div class="d-flex align-items-center justify-content-center gap-2"><div class="spinner-border spinner-border-sm text-pink"></div><small>တင်နေပါတယ်…</small></div></div>' +
+            '<p class="text-muted small mt-2 mb-0"><i class="bi bi-info-circle me-1"></i>MP3 ပဲ — အများဆုံး ၁၀ MB</p>' +
             '</div></div>');
         updateProgress();
     });
@@ -344,13 +344,13 @@ $(function () {
                     var cap = $b.find('.audio-caption').val().trim();
                     if (cap) $preview.find('.lf-track-title').text(cap);
                     initCustomPlayer($preview);
-                    $b.find('.choose-audio').html('<i class="bi bi-arrow-repeat me-1"></i>Change').removeClass('d-none');
+                    $b.find('.choose-audio').html('<i class="bi bi-arrow-repeat me-1"></i>ပြောင်းပါ').removeClass('d-none');
                 } else {
-                    alert(r.message||'Upload failed.');
+                    alert(r.message||'တင်မရပါ။');
                     $b.find('.choose-audio').removeClass('d-none');
                 }
             },
-            error: function () { $b.find('.upload-progress-audio,.choose-audio').toggleClass('d-none'); alert('Upload failed.'); }
+            error: function () { $b.find('.upload-progress-audio,.choose-audio').toggleClass('d-none'); alert('တင်မရပါ။'); }
         });
     });
 
@@ -358,20 +358,20 @@ $(function () {
     $(document).on('input', '.audio-caption', function () {
         var $b = $(this).closest('.block-card');
         var cap = $(this).val().trim();
-        $b.find('.lf-track-title').text(cap || 'Uploaded audio');
+        $b.find('.lf-track-title').text(cap || 'တင်ထားသော အသံ');
     });
 
     /* ---- Game Block ---- */
     $('#addGameBlock').on('click', function () {
-        if ($('.block-card[data-type="game"]').length) { alert('Only one game per story.'); return; }
+        if ($('.block-card[data-type="game"]').length) { alert('ဇာတ်လမ်းတစ်ပုဒ်မှာ ဂိမ်းတစ်ခုပဲ ထည့်လို့ရပါတယ်။'); return; }
         blockId++;
         $('#blocksContainer').append(
             '<div class="card block-card p-4 mb-3" data-block-id="'+blockId+'" data-type="game">' +
-            '<button type="button" class="block-remove" title="Remove">&times;</button>' +
-            '<span class="badge bg-danger block-type-badge mb-2"><i class="bi bi-joystick me-1"></i>Yes / No Game</span>' +
-            '<div class="row g-3 mb-3"><div class="col-6"><label class="form-label small fw-bold">Yes Button</label><input type="text" class="form-control game-yes-text" value="YES ❤️"></div>' +
-            '<div class="col-6"><label class="form-label small fw-bold">No Button</label><input type="text" class="form-control game-no-text" value="NO 😒"></div></div>' +
-            '<div><label class="form-label small fw-bold">Message After "Yes"</label><input type="text" class="form-control game-success-msg" value="See you on Valentine 💘"></div>' +
+            '<button type="button" class="block-remove" title="ဖယ်ရှားပါ">&times;</button>' +
+            '<span class="badge bg-danger block-type-badge mb-2"><i class="bi bi-joystick me-1"></i>ဟုတ် / မဟုတ် ဂိမ်း</span>' +
+            '<div class="row g-3 mb-3"><div class="col-6"><label class="form-label small fw-bold">ဟုတ် ခလုတ်</label><input type="text" class="form-control game-yes-text" value="ဟုတ်ပါ ❤️"></div>' +
+            '<div class="col-6"><label class="form-label small fw-bold">မဟုတ် ခလုတ်</label><input type="text" class="form-control game-no-text" value="မဟုတ်ပါ 😒"></div></div>' +
+            '<div><label class="form-label small fw-bold">ဟုတ်လို့ ပြန်ပြောတဲ့ စာ</label><input type="text" class="form-control game-success-msg" value="ချစ်သူများနေ့မှာ တွေ့မယ် 💘"></div>' +
             '</div>');
         updateProgress();
     });
@@ -387,11 +387,11 @@ $(function () {
         $('#blocksContainer .block-card').each(function () {
             var t = $(this).data('type');
             if (t === 'text') { var v = $(this).find('.block-value').val().trim(); if (!v) { err=true; $(this).find('.block-value').addClass('is-invalid').focus(); return false; } $(this).find('.block-value').removeClass('is-invalid'); blocks.push({type:'text',value:v}); }
-            else if (t === 'photo') { var u = $(this).find('.block-value').val().trim(); if (!u) { err=true; alert('Upload a photo first.'); return false; } blocks.push({type:'photo',url:u}); }
-            else if (t === 'audio') { var au = $(this).find('.block-value').val().trim(); if (!au) { err=true; alert('Upload an audio file first.'); return false; } blocks.push({type:'audio',url:au,caption:$(this).find('.audio-caption').val().trim()}); }
-            else if (t === 'game') { blocks.push({type:'game', yesText:$(this).find('.game-yes-text').val()||'YES ❤️', noText:$(this).find('.game-no-text').val()||'NO 😒', noBehavior:'run', successMessage:$(this).find('.game-success-msg').val()||'See you on Valentine 💘'}); }
+            else if (t === 'photo') { var u = $(this).find('.block-value').val().trim(); if (!u) { err=true; alert('ဓာတ်ပုံ ဦးစွာ တင်ပါ။'); return false; } blocks.push({type:'photo',url:u}); }
+            else if (t === 'audio') { var au = $(this).find('.block-value').val().trim(); if (!au) { err=true; alert('အသံဖိုင် ဦးစွာ တင်ပါ။'); return false; } blocks.push({type:'audio',url:au,caption:$(this).find('.audio-caption').val().trim()}); }
+            else if (t === 'game') { blocks.push({type:'game', yesText:$(this).find('.game-yes-text').val()||'ဟုတ်ပါ ❤️', noText:$(this).find('.game-no-text').val()||'မဟုတ်ပါ 😒', noBehavior:'run', successMessage:$(this).find('.game-success-msg').val()||'ချစ်သူများနေ့မှာ တွေ့မယ် 💘'}); }
         });
-        if (err || !blocks.length) { if (!blocks.length && !err) alert('Add at least one block.'); return; }
+        if (err || !blocks.length) { if (!blocks.length && !err) alert('ဘလော့ခ် တစ်ခုအနည်းဆုံး ထည့်ပါ။'); return; }
         // Gather optional couple data
         var coupleData = {};
         var yourPhoto = $('#yourPhotoUrl').val();
@@ -406,8 +406,8 @@ $(function () {
 
         $btn.prop('disabled',true).html('<span class="spinner-border spinner-border-sm me-2"></span>' + (payload.story_key ? 'Saving…' : 'Creating…'));
         $.ajax({ url:'save.php', type:'POST', contentType:'application/json', data:JSON.stringify(payload),
-            success: function (r) { if (r.success) window.location.href=r.redirect; else { alert(r.message||'Error'); $btn.prop('disabled',false).html('<i class="bi bi-eye-fill me-2"></i>Preview & Share'); } },
-            error:   function ()  { alert('Network error.'); $btn.prop('disabled',false).html('<i class="bi bi-eye-fill me-2"></i>Preview & Share'); }
+            success: function (r) { if (r.success) window.location.href=r.redirect; else { alert(r.message||'အမှားတစ်ခု ဖြစ်သွားပါတယ်။'); $btn.prop('disabled',false).html('<i class="bi bi-eye-fill me-2"></i>ကြိုကြည့်ပါ နဲ့ မျှဝေပါ'); } },
+            error:   function ()  { alert('အင်တာနက် အမှား ဖြစ်သွားပါတယ်။'); $btn.prop('disabled',false).html('<i class="bi bi-eye-fill me-2"></i>ကြိုကြည့်ပါ နဲ့ မျှဝေပါ'); }
         });
     });
 
