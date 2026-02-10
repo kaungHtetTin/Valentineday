@@ -3,6 +3,7 @@
  * Database Connection
  * LoveFun App
  */
+require_once __DIR__ . '/cors.php';
 
 $host = 'localhost';
 $dbname = 'love_app';
