@@ -218,6 +218,13 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
                             </div>
 
                         <?php elseif ($block['type'] === 'game'): ?>
+
+                            <!-- Separate block: reaction gif + text (filled by JS on YES/NO click) -->
+                            <div id="gifBlock" class="story-block gif-block glass-card p-4 mb-3 text-center d-none animate-in" style="animation-delay: <?= $delay + 0.1 ?>s">
+                                <!-- JS fills .gif-block-content with img + text -->
+                                <div class="gif-block-content"></div>
+                            </div>
+
                             <div id="gameBlock" class="story-block game-block glass-card p-4 mb-3 text-center animate-in"
                                  data-success-message="<?= sanitize($block['successMessage'] ?? 'I love you! 💘') ?>"
                                  style="animation-delay: <?= $delay ?>s">
@@ -232,12 +239,6 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
                                 <div class="game-success-message d-none mt-3">
                                     <p class="success-text"></p>
                                 </div>
-                            </div>
-
-                            <!-- Separate block: reaction gif + text (filled by JS on YES/NO click) -->
-                            <div id="gifBlock" class="story-block gif-block glass-card p-4 mb-3 text-center d-none animate-in" style="animation-delay: <?= $delay + 0.1 ?>s">
-                                <!-- JS fills .gif-block-content with img + text -->
-                                <div class="gif-block-content"></div>
                             </div>
 
                         <?php endif; ?>
@@ -260,6 +261,17 @@ $theme = isset($storyData['theme']) ? $storyData['theme'] : 'default';
     <script>
         window.GAME_LOVES = <?= json_encode($loves) ?>;
         window.GAME_SADS  = <?= json_encode($sads) ?>;
+        // Preload GIFs immediately
+        (function() {
+            var allGifs = [].concat(window.GAME_LOVES || [], window.GAME_SADS || []);
+            allGifs.forEach(function(item) {
+                var src = (item.url || item.gif || '');
+                if (src) {
+                    var img = new Image();
+                    img.src = src;
+                }
+            });
+        })();
     </script>
     <script src="assets/js/app.js"></script>
 </body>

@@ -828,7 +828,14 @@ img { max-width: 100%; height: auto; }
     border: 1px solid rgba(100,100,120,0.12);
     box-shadow: 0 8px 32px rgba(0,0,0,0.06);
 }
-.gif-block-content { min-height: 80px; }
+.gif-block-content { min-height: 80px; position: relative; }
+.gif-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
 .gif-block-img {
     width: 100%;
     max-width: 220px;
@@ -840,6 +847,8 @@ img { max-width: 100%; height: auto; }
     display: block;
     margin: 0 auto 0.75rem;
     vertical-align: middle;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 .gif-block-text {
     font-family: var(--font-heading);

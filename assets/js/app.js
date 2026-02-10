@@ -509,6 +509,23 @@ $(function () {
     /* NO button: click only (no mouseenter/touchstart) */
     $(document).on('click', '.game-no', function (e) { e.preventDefault(); onNoInteraction($(this)); });
 
+    /* ---- Preload all GIFs for instant display ---- */
+    var gifCache = {};
+    function preloadGifs() {
+        if (window.GAME_LOVES && window.GAME_SADS) {
+            var allGifs = [].concat(window.GAME_LOVES, window.GAME_SADS);
+            allGifs.forEach(function(item) {
+                var src = (item.url || item.gif || '');
+                if (src && !gifCache[src]) {
+                    var img = new Image();
+                    img.src = src;
+                    gifCache[src] = img;
+                }
+            });
+        }
+    }
+    if (window.GAME_LOVES && window.GAME_SADS) preloadGifs();
+
     /* ---- YES click: win (optional gifBlock from GAME_LOVES) ---- */
     $(document).on('click', '.game-yes', function () {
         var $block = $(this).closest('.game-block');
@@ -523,8 +540,12 @@ $(function () {
             var src = (item.url || item.gif || '');
             var $content = $gifBlock.find('.gif-block-content');
             if (!$content.length) $content = $gifBlock;
-            $content.html('<div class="gif-block-inner gif-block-love"><img class="gif-block-img" src="' + src + '" alt="" decoding="async"><p class="gif-block-text">' + txt + '</p></div>');
+            var imgHtml = '<div class="gif-block-inner gif-block-love"><div class="gif-loading d-none"><div class="spinner-border spinner-border-sm text-pink"></div></div><img class="gif-block-img" src="' + src + '" alt="" loading="eager" onload="this.parentElement.querySelector(\'.gif-loading\').classList.add(\'d-none\')" onerror="this.parentElement.querySelector(\'.gif-loading\').classList.add(\'d-none\')"><p class="gif-block-text">' + txt + '</p></div>';
+            $content.html(imgHtml);
             $gifBlock.removeClass('d-none gif-block-sad').addClass('gif-block-visible gif-block-love');
+            if (!gifCache[src]) {
+                $content.find('.gif-loading').removeClass('d-none');
+            }
         }
 
         $arena.css({ opacity: 0, transition: 'opacity 0.4s' });
@@ -545,8 +566,12 @@ $(function () {
             var src = (item.url || item.gif || '');
             var $content = $gifBlock.find('.gif-block-content');
             if (!$content.length) $content = $gifBlock;
-            $content.html('<div class="gif-block-inner gif-block-sad"><img class="gif-block-img" src="' + src + '" alt="" decoding="async"><p class="gif-block-text">' + txt + '</p></div>');
+            var imgHtml = '<div class="gif-block-inner gif-block-sad"><div class="gif-loading d-none"><div class="spinner-border spinner-border-sm text-muted"></div></div><img class="gif-block-img" src="' + src + '" alt="" loading="eager" onload="this.parentElement.querySelector(\'.gif-loading\').classList.add(\'d-none\')" onerror="this.parentElement.querySelector(\'.gif-loading\').classList.add(\'d-none\')"><p class="gif-block-text">' + txt + '</p></div>';
+            $content.html(imgHtml);
             $gifBlock.removeClass('d-none gif-block-love').addClass('gif-block-visible gif-block-sad');
+            if (!gifCache[src]) {
+                $content.find('.gif-loading').removeClass('d-none');
+            }
         }
     });
 
